@@ -85,6 +85,9 @@ public class DBAdapter {
     public boolean eliminarOrganismo(long id){
         return db.delete(TABLA, CLAVE_ID + " = "+id,null) > 0;
     }
+    public boolean eliminarTodos(long id){
+        return db.delete(TABLA, CLAVE_ID + " != 0",null) > 0;
+    }
     // Recupera todos los paises de la Base de Datos
     public Cursor getOrganismos(){
         return db.query(TABLA, new String[] {CLAVE_ID,CLAVE_CODIGO_ORGANISMO,CLAVE_NOMBRE_ORGANISMO,CLAVE_TELEFONO_ORGANISMO,

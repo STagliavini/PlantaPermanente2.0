@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,14 +50,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         actualizarBase("https://tagliavinilab6.000webhostapp.com/listarOrganismos.php");
-        //dba.abrir();
-        //Cursor cursor=dba.getOrganismos();
-        //cursor.moveToFirst();
-        //for(int j=0;j<cursor.getCount();j++){
-        //    System.out.println(cursor.getString(cursor.getColumnIndex("codigo_organismo")));
-        //}
-        //System.out.println(cursor.getCount());
-        //dba.cerrar();
+        dba.abrir();
+        Cursor cursor=dba.getOrganismos();
+        cursor.moveToFirst();
+        for(int j=0;j<cursor.getCount();j++){
+        System.out.println(cursor.getString(cursor.getColumnIndex("codigo_organismo")));
+        }
+        System.out.println(cursor.getCount());
+        dba.cerrar();
         inises=(Button)findViewById(R.id.btnLogin);
         anonimo=(Button)findViewById(R.id.btnAnom);
         usu=(EditText) findViewById(R.id.edtUsuario);
@@ -173,14 +174,17 @@ public class MainActivity extends AppCompatActivity {
                         ja=new JSONArray(response);
                         dba.abrir();
                         Cursor cursor=dba.getOrganismos();
+                        JSONObject jo=null;
                         for(int i=0;i<ja.length();i++){
                             boolean existe=false;
-                            JSONObject jo=ja.getJSONObject(i);
+                            jo=ja.getJSONObject(i);
                             cursor.moveToFirst();
-                            for(int j=0;j<cursor.getCount();j++){
-                                if(cursor.getInt(2)==jo.getInt("codigo_organismo")){
+                            System.out.println(jo.getInt("codigo_organismo"));
+                            for(int j=0;j<cursor.getCount()&&!existe;j++){
+                                if(cursor.getInt(1)==jo.getInt("codigo_organismo")){
                                     existe=true;
                                 }
+                                cursor.moveToNext();
                             }
                             if(!existe){
                                 boolean estado_organismo=false;
@@ -196,12 +200,40 @@ public class MainActivity extends AppCompatActivity {
                                     lat_punto=Float.parseFloat(jo.getString("lat_punto"));
                                     long_punto=Float.parseFloat(jo.getString("long_punto"));
                                     dba.insertarOrganismo(jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
-                                            jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,Float.parseFloat(jo.getString("lat_punto")),Float.parseFloat(jo.getString("long_punto")));
+                                            jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
                                 }
                                 catch(NumberFormatException e){
                                     dba.insertarOrganismo(jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
                                             jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,0,0);
                                 }
+                            }
+                            else{
+                                boolean estado_organismo=false;
+                                float lat_punto;
+                                float long_punto;
+                                if(jo.getInt("estado_organismo")==1){
+                                    estado_organismo=true;
+                                }
+                                else{
+                                    estado_organismo=false;
+                                }
+                                cursor.moveToPrevious();
+                                if(jo.getInt("codigo_organismo")!=cursor.getInt(1)||
+                                   !jo.getString("nombre_organismo").equals(cursor.getString(2))||
+                                   !jo.getString("telefono_organismo").equals(cursor.getString(3))||
+                                   !jo.getString("direccion_organismo").equals(cursor.getString(4))||
+                                        !jo.getString("mail_organismo").equals(cursor.getString(5))){
+                                    try{
+                                        lat_punto=Float.parseFloat(jo.getString("lat_punto"));
+                                        long_punto=Float.parseFloat(jo.getString("long_punto"));
+                                        dba.actualizarOrganismo(jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
+                                                jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
+                                    }
+                                    catch(NumberFormatException e){
+                                        dba.actualizarOrganismo(jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
+                                                jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,0,0);
+                                    }
+                                 }
                             }
                         }
                         dba.cerrar();

@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_person_black_24dp"
             android:title="Empleados" />
         <item
+            android:id="@+id/nav_organismos"
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="Organismos" />
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_first_page_black_24dp"
             android:title="Cerrar Sesion" />

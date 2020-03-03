@@ -37,6 +37,10 @@
             android:label="Puntos"
             android:parentActivityName=".MenuDrawer"></activity>
         <activity
+            android:name=".organismos.organismos"
+            android:label="Planta Permanente"
+            android:parentActivityName=".MenuDrawer"></activity>
+        <activity
             android:name=".empleados.empleado_contacto"
             android:label="Agregar Contacto"
             android:parentActivityName=".MenuDrawer" />
