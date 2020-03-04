@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void mostrarNotificacion(String text){
-        notificacion=new NotificationCompat.Builder(this);
+        notificacion=new NotificationCompat.Builder(getApplicationContext(),CHANNEL_ID);
         notificacion.setSmallIcon(R.drawable.ic_business_center_black_24dp);
         notificacion.setTicker("Base de Datos Actualizada");
         notificacion.setContentTitle("Base de Datos Actualizada");
