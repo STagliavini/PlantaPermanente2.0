@@ -116,10 +116,10 @@ public class organismos extends Fragment {
                 btnMapa.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String dni=itempas.get("dni").toString();
-                        Intent intencion=new Intent(getContext(), puntos_empleados.class);
+                        String codigo=itempas.get("codigo").toString();
+                        Intent intencion=new Intent(getContext(), puntos_organismos.class);
                         Bundle pam= new Bundle();
-                        pam.putString("dni",dni);
+                        pam.putString("codigo",codigo);
                         intencion.putExtras(pam);
                         startActivity(intencion);
                     }

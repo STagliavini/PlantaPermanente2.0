@@ -83,7 +83,7 @@ public class DBAdapter {
         return db.insert(TABLA, null, valores);
     }
     // Elimina un pais de la Base de Datos
-    public boolean eliminarOrganismo(long id){
+    public boolean eliminarOrganismo(int id){
         return db.delete(TABLA, CLAVE_ID + " = "+id,null) > 0;
     }
     public boolean eliminarTodos(long id){

@@ -35,6 +35,10 @@
             android:label="Puntos"
             android:parentActivityName=".MenuDrawer" />
         <activity
+            android:name=".organismos.puntos_organismos"
+            android:label="Puntos"
+            android:parentActivityName=".MenuDrawer" />
+        <activity
             android:name=".organismos.organismos"
             android:label="Planta Permanente"
             android:parentActivityName=".MenuDrawer" />
@@ -50,7 +54,7 @@
         <activity
             android:name=".organismos.organismo_contacto"
             android:label="Agregar Contacto"
-            android:parentActivityName=".MenuDrawer"/>
+            android:parentActivityName=".MenuDrawer" />
         <activity
             android:name=".organismos.organismo_enviar_mail"
             android:label="Enviar Mail"

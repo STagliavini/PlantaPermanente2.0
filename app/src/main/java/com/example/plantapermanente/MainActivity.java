@@ -216,23 +216,26 @@ public class MainActivity extends AppCompatActivity {
                                 else{
                                     estado_organismo=false;
                                 }
+                                try{
+                                    lat_punto=Float.parseFloat(jo.getString("lat_punto"));
+                                    long_punto=Float.parseFloat(jo.getString("long_punto"));
+                                }
+                                catch(NumberFormatException e){
+                                    lat_punto=0;
+                                    long_punto=0;
+                                }
                                 cursor.moveToPrevious();
                                 if(jo.getInt("codigo_organismo")!=cursor.getInt(1)||
                                    !jo.getString("nombre_organismo").equals(cursor.getString(2))||
                                    !jo.getString("telefono_organismo").equals(cursor.getString(3))||
                                    !jo.getString("direccion_organismo").equals(cursor.getString(4))||
-                                        !jo.getString("mail_organismo").equals(cursor.getString(5))){
-                                    try{
-                                        System.out.println(jo.getInt("id_organismo"));
-                                        lat_punto=Float.parseFloat(jo.getString("lat_punto"));
-                                        long_punto=Float.parseFloat(jo.getString("long_punto"));
-                                        dba.actualizarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
+                                        !jo.getString("mail_organismo").equals(cursor.getString(5))||
+                                        jo.getInt("estado_organismo")!=cursor.getInt(6)||
+                                    lat_punto!=cursor.getFloat(7)||
+                                        lat_punto!=cursor.getFloat(8)){
+                                    dba.actualizarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
                                                 jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
-                                    }
-                                    catch(NumberFormatException e){
-                                        dba.actualizarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
-                                                jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,0,0);
-                                    }
+
                                  }
                             }
                         }
