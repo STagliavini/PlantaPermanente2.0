@@ -54,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor=dba.getOrganismos();
         cursor.moveToFirst();
         for(int j=0;j<cursor.getCount();j++){
-        System.out.println(cursor.getString(cursor.getColumnIndex("codigo_organismo")));
+        System.out.println(cursor.getString(cursor.getColumnIndex("id_organismo")));
+        cursor.moveToNext();
         }
-        System.out.println(cursor.getCount());
         dba.cerrar();
         inises=(Button)findViewById(R.id.btnLogin);
         anonimo=(Button)findViewById(R.id.btnAnom);
@@ -179,9 +179,8 @@ public class MainActivity extends AppCompatActivity {
                             boolean existe=false;
                             jo=ja.getJSONObject(i);
                             cursor.moveToFirst();
-                            System.out.println(jo.getInt("codigo_organismo"));
                             for(int j=0;j<cursor.getCount()&&!existe;j++){
-                                if(cursor.getInt(1)==jo.getInt("codigo_organismo")){
+                                if(cursor.getInt(0)==jo.getInt("id_organismo")){
                                     existe=true;
                                 }
                                 cursor.moveToNext();
@@ -199,11 +198,11 @@ public class MainActivity extends AppCompatActivity {
                                 try{
                                     lat_punto=Float.parseFloat(jo.getString("lat_punto"));
                                     long_punto=Float.parseFloat(jo.getString("long_punto"));
-                                    dba.insertarOrganismo(jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
+                                    dba.insertarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
                                             jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
                                 }
                                 catch(NumberFormatException e){
-                                    dba.insertarOrganismo(jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
+                                    dba.insertarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
                                             jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,0,0);
                                 }
                             }
@@ -224,13 +223,14 @@ public class MainActivity extends AppCompatActivity {
                                    !jo.getString("direccion_organismo").equals(cursor.getString(4))||
                                         !jo.getString("mail_organismo").equals(cursor.getString(5))){
                                     try{
+                                        System.out.println(jo.getInt("id_organismo"));
                                         lat_punto=Float.parseFloat(jo.getString("lat_punto"));
                                         long_punto=Float.parseFloat(jo.getString("long_punto"));
-                                        dba.actualizarOrganismo(jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
+                                        dba.actualizarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
                                                 jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
                                     }
                                     catch(NumberFormatException e){
-                                        dba.actualizarOrganismo(jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
+                                        dba.actualizarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
                                                 jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,0,0);
                                     }
                                  }

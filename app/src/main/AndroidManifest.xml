@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.plantapermanente">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -19,7 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -35,17 +33,26 @@
         <activity
             android:name=".empleados.puntos_empleados"
             android:label="Puntos"
-            android:parentActivityName=".MenuDrawer"></activity>
+            android:parentActivityName=".MenuDrawer" />
         <activity
             android:name=".organismos.organismos"
             android:label="Planta Permanente"
-            android:parentActivityName=".MenuDrawer"></activity>
+            android:parentActivityName=".MenuDrawer" />
         <activity
             android:name=".empleados.empleado_contacto"
             android:label="Agregar Contacto"
             android:parentActivityName=".MenuDrawer" />
         <activity
             android:name=".empleados.empleado_enviar_mail"
+            android:label="Enviar Mail"
+            android:parentActivityName=".MenuDrawer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".organismos.organismo_contacto"
+            android:label="Agregar Contacto"
+            android:parentActivityName=".MenuDrawer"/>
+        <activity
+            android:name=".organismos.organismo_enviar_mail"
             android:label="Enviar Mail"
             android:parentActivityName=".MenuDrawer"
             android:theme="@style/AppTheme.NoActionBar" />

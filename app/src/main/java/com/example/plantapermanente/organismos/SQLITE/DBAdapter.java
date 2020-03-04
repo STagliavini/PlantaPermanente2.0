@@ -22,7 +22,7 @@ public class DBAdapter {
     static final String TABLA = "organismo";
     static final int VERSION = 1;
     static final String CREAR_DB =
-            "CREATE TABLE organismo (id_organismo INTEGER PRIMARY KEY AUTOINCREMENT,"+"codigo_organismo INT UNIQUE,"+
+            "CREATE TABLE organismo (id_organismo INT PRIMARY KEY,"+"codigo_organismo INT UNIQUE,"+
             "nombre_organismo TEXT,"+"telefono_organismo TEXT,"+"direccion_organismo TEXT,"+"mail_organismo TEXT,"+"estado_organismo boolean,"+"lat_organismo float ,"+"long_organismo float);";
 
     final Context contexto;
@@ -69,8 +69,9 @@ public class DBAdapter {
         DBHelper.close();
     }
     // Inserta un pais en la Base de Datos
-    public long insertarOrganismo(int codigo_organismo,String nombre_organismo,String telefono_organismo,String direccion_organismo,String mail_organismo,boolean estado_organismo,float lat_organismo,float long_organismo){
+    public long insertarOrganismo(int id_organismo,int codigo_organismo,String nombre_organismo,String telefono_organismo,String direccion_organismo,String mail_organismo,boolean estado_organismo,float lat_organismo,float long_organismo){
         ContentValues valores = new ContentValues();
+        valores.put(CLAVE_ID,id_organismo);
         valores.put(CLAVE_CODIGO_ORGANISMO,codigo_organismo);
         valores.put(CLAVE_NOMBRE_ORGANISMO,nombre_organismo);
         valores.put(CLAVE_TELEFONO_ORGANISMO,telefono_organismo);
@@ -105,7 +106,7 @@ public class DBAdapter {
         return cursor;
     }
     // Actualiza un pais de la Base de Datos
-    public boolean actualizarOrganismo(int codigo_organismo,String nombre_organismo,String telefono_organismo,String direccion_organismo,String mail_organismo,boolean estado_organismo,float lat_organismo,float long_organismo){
+    public boolean actualizarOrganismo(int id_organismo,int codigo_organismo,String nombre_organismo,String telefono_organismo,String direccion_organismo,String mail_organismo,boolean estado_organismo,float lat_organismo,float long_organismo){
         ContentValues valores = new ContentValues();
         valores.put(CLAVE_CODIGO_ORGANISMO,codigo_organismo);
         valores.put(CLAVE_NOMBRE_ORGANISMO,nombre_organismo);
@@ -115,6 +116,6 @@ public class DBAdapter {
         valores.put(CLAVE_ESTADO_ORGANISMO,estado_organismo);
         valores.put(CLAVE_LAT_ORGANISMO,lat_organismo);
         valores.put(CLAVE_LONG_ORGANISMO,long_organismo);
-        return db.update(TABLA, valores, CLAVE_CODIGO_ORGANISMO+"="+codigo_organismo, null)>0;
+        return db.update(TABLA, valores, CLAVE_ID+"="+id_organismo, null)>0;
     }
 }

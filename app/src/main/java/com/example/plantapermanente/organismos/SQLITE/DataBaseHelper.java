@@ -16,7 +16,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db){
-        db.execSQL("CREATE TABLE organismo (id_organismo INTEGER PRIMARY KEY,"+"codigo_organismo INT UNIQUE,"+
+        db.execSQL("CREATE TABLE organismo (id_organismo INT PRIMARY KEY,"+"codigo_organismo INT UNIQUE,"+
                 "nombre_organismo TEXT,"+"telefono_organismo TEXT,"+"direccion_organismo TEXT,"+"mail_organismo TEXT,"+"estado_organismo boolean,"+"lat_organismo float ,"+"long_organismo float);");
     }
     public void insertIni(String nombre,SQLiteDatabase db){
