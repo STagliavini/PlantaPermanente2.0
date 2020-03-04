@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/nav_empleados"
-        android:name="com.example.plantapermanente.empleados.empleados_tabbed"
+        android:name="com.example.plantapermanente.empleados.empleados"
         android:label="Empleados"
-        tools:layout="@layout/fragment_empleados_tabbed" />
+        tools:layout="@layout/fragment_empleados" />
     <fragment
         android:id="@+id/nav_organismos"
         android:label="Organismos"

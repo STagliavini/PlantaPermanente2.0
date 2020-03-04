@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         android:backgroundTint="@android:color/darker_gray"
         android:ems="10"
-        android:hint="Correo"
+        android:hint="Nombre y Apellido"
         android:inputType="textPersonName"
         android:paddingLeft="5dp" />
 
@@ -28,7 +28,7 @@
         android:layout_marginEnd="8dp"
         android:backgroundTint="@android:color/darker_gray"
         android:ems="10"
-        android:hint="Contrasenia"
+        android:hint="Numero de Telefono"
         android:inputType="textPersonName"
         android:paddingLeft="5dp" />
     <Button

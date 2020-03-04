@@ -6,13 +6,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.example.plantapermanente.empleados.empleado_contacto;
 import com.example.plantapermanente.empleados.empleado_enviar_mail;
@@ -28,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 public class organismos extends Fragment {
+    EditText codigo;
+    EditText nombre;
     private DBAdapter dba;
     ListView list;
     View view;
@@ -39,6 +45,40 @@ public class organismos extends Fragment {
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_organismos, container, false);
         sp= getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+        codigo=view.findViewById(R.id.edtCodigo);
+        nombre=view.findViewById(R.id.edtNombre);
+        codigo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                llenarLista();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        nombre.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                llenarLista();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         llenarLista();
         return view;
     }
@@ -49,7 +89,18 @@ public class organismos extends Fragment {
         organismos=new ArrayList<Map<String, Object>>();
         dba=new DBAdapter(this.getContext());
         dba.abrir();
-        Cursor cursor=dba.getOrganismos();
+        int cod=-1;
+        if(codigo.getText().toString().isEmpty()){
+            cod=-1;
+        }
+        else{
+            try {
+                cod=Integer.parseInt(codigo.getText().toString());
+            }catch(NumberFormatException e){
+                Toast.makeText(this.getContext(),"Numero demasiado Largo", Toast.LENGTH_LONG).show();
+            }
+        }
+        Cursor cursor=dba.getFiltroOrganismos(cod,nombre.getText().toString());
         cursor.moveToFirst();
         Map<String, Object> item;
         for(int i=0;i<cursor.getCount();i++){

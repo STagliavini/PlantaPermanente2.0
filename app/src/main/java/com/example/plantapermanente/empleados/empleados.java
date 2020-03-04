@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,9 +27,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.plantapermanente.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class empleados_tabbed extends Fragment {
+public class empleados extends Fragment {
     private List<Map<String, Object>> empleados;
     EditText dni;
     EditText ape;
@@ -53,7 +49,7 @@ public class empleados_tabbed extends Fragment {
 @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-    view=inflater.inflate(R.layout.fragment_empleados_tabbed, container, false);
+    view=inflater.inflate(R.layout.fragment_empleados, container, false);
     sp= getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
     dni=view.findViewById(R.id.edtDni);
     ape=view.findViewById(R.id.edtApe);

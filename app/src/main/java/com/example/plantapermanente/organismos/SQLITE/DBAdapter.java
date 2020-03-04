@@ -95,6 +95,25 @@ public class DBAdapter {
                         CLAVE_DIRECCION_ORGANISMO,CLAVE_MAIL_ORGANISMO,CLAVE_ESTADO_ORGANISMO,CLAVE_LAT_ORGANISMO,CLAVE_LONG_ORGANISMO},
                 null, null, null, null, null);
     }
+    public Cursor getFiltroOrganismos(int codigo_organismo,String nombre_organismo){
+        String cadena="";
+        if(codigo_organismo>-1){
+            cadena="codigo_organismo like '%"+codigo_organismo+"%'";
+        }
+        else{
+            cadena="codigo_organismo!="+codigo_organismo;
+        }
+        if(!nombre_organismo.isEmpty()){
+            cadena=cadena+" and nombre_organismo like '%"+nombre_organismo+"%'";
+        }
+        else{
+            cadena=cadena+" and nombre_organismo!=''";
+        }
+        cadena=cadena+" and estado_organismo=1";
+        return db.query(TABLA, new String[] {CLAVE_ID,CLAVE_CODIGO_ORGANISMO,CLAVE_NOMBRE_ORGANISMO,CLAVE_TELEFONO_ORGANISMO,
+                        CLAVE_DIRECCION_ORGANISMO,CLAVE_MAIL_ORGANISMO,CLAVE_ESTADO_ORGANISMO,CLAVE_LAT_ORGANISMO,CLAVE_LONG_ORGANISMO},
+                cadena, null, null, null, null);
+    }
     // Recupera un pais de la Base de Datos
     public Cursor getAutoridades(long id){
         Cursor cursor =

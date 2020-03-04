@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".empleados.empleados_tabbed">
+    tools:context=".empleados.empleados">
 
     <LinearLayout
         android:layout_width="match_parent"

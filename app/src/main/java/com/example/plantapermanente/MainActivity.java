@@ -1,7 +1,9 @@
 package com.example.plantapermanente;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sp;
     SharedPreferences.Editor editor;
     DBAdapter dba;
+    NotificationCompat.Builder notificacion;
+    private static final int idUnica=51623;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,6 +179,8 @@ public class MainActivity extends AppCompatActivity {
                         dba.abrir();
                         Cursor cursor=dba.getOrganismos();
                         JSONObject jo=null;
+                        boolean insertado=false;
+                        boolean actualizado=false;
                         for(int i=0;i<ja.length();i++){
                             boolean existe=false;
                             jo=ja.getJSONObject(i);
@@ -198,13 +204,14 @@ public class MainActivity extends AppCompatActivity {
                                 try{
                                     lat_punto=Float.parseFloat(jo.getString("lat_punto"));
                                     long_punto=Float.parseFloat(jo.getString("long_punto"));
-                                    dba.insertarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
-                                            jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
                                 }
                                 catch(NumberFormatException e){
-                                    dba.insertarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
-                                            jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,0,0);
+                                    lat_punto=0;
+                                    long_punto=0;
                                 }
+                                dba.insertarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
+                                            jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
+                                insertado=true;
                             }
                             else{
                                 boolean estado_organismo=false;
@@ -236,8 +243,15 @@ public class MainActivity extends AppCompatActivity {
                                     dba.actualizarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
                                                 jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
 
-                                 }
+                                 actualizado=true;
+                                }
                             }
+                        }
+                        if(insertado){
+                            mostrarNotificacion("Nuevos registros fueron insertados en su base de datos local");
+                        }
+                        if(actualizado){
+                            mostrarNotificacion("Anteriores registros fueron actualizados en su base de datos local");
                         }
                         dba.cerrar();
                     }catch (Exception e){
@@ -253,5 +267,13 @@ public class MainActivity extends AppCompatActivity {
         });
         RequestQueue requestQueue= Volley.newRequestQueue(this);
         requestQueue.add(jsonRequest);
+    }
+    private void mostrarNotificacion(String text){
+        notificacion=new NotificationCompat.Builder(this);
+        notificacion.setSmallIcon(R.drawable.ic_business_center_black_24dp);
+        notificacion.setContentTitle("Base de Datos Actualizada");
+        notificacion.setContentText(text);
+        NotificationManager nm=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        nm.notify(idUnica,notificacion.build());
     }
 }
