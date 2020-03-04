@@ -1,27 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".empleados.empleados_tabbed">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary" />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:orientation="vertical">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <EditText
+            android:id="@+id/edtDni"
+            android:drawableLeft="@drawable/ic_assignment_black_24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@android:color/darker_gray"
+            android:ems="10"
+            android:hint="DNI"
+            android:inputType="textPersonName"
+            android:paddingLeft="5dp" />
+
+        <EditText
+            android:id="@+id/edtApe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_person_gray_24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@android:color/darker_gray"
+            android:ems="10"
+            android:hint="Apellido"
+            android:inputType="textPersonName"
+            android:paddingLeft="5dp" />
+
+        <EditText
+            android:id="@+id/edtNom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:drawableLeft="@drawable/ic_person_gray_24dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@android:color/darker_gray"
+            android:ems="10"
+            android:hint="Nombre"
+            android:inputType="textPersonName"
+            android:paddingLeft="5dp" />
+
+        <ListView
+            android:id="@+id/listemp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</FrameLayout>

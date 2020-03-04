@@ -10,7 +10,7 @@
             android:title="Empleados" />
         <item
             android:id="@+id/nav_organismos"
-            android:icon="@drawable/ic_person_black_24dp"
+            android:icon="@drawable/ic_business_center_black_24dp"
             android:title="Organismos" />
         <item
             android:id="@+id/nav_logout"

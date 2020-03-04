@@ -10,7 +10,7 @@
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="137dp"
-        app:srcCompat="@drawable/ic_person_black_24dp" />
+        app:srcCompat="@drawable/ic_business_center_black_24dp" />
     <Button
         android:id="@+id/btnContact"
         android:layout_width="match_parent"
