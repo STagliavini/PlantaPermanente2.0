@@ -2,12 +2,15 @@ package com.example.plantapermanente;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.textclassifier.ConversationActions;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     DBAdapter dba;
     NotificationCompat.Builder notificacion;
     private static final int idUnica=51623;
+    private static final String CHANNEL_ID="Notificacion";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -248,9 +252,11 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                         if(insertado){
+                            createNotificationChannel();
                             mostrarNotificacion("Nuevos registros fueron insertados en su base de datos local");
                         }
                         if(actualizado){
+                            createNotificationChannel();
                             mostrarNotificacion("Anteriores registros fueron actualizados en su base de datos local");
                         }
                         dba.cerrar();
@@ -268,12 +274,25 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(this);
         requestQueue.add(jsonRequest);
     }
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            CharSequence name="canal 1";
+            String description="canal 1";
+            int importance=NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel=new NotificationChannel(CHANNEL_ID,name,importance);
+            channel.setDescription(description);
+            NotificationManager nm=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            nm.createNotificationChannel(channel);
+        }
+    }
     private void mostrarNotificacion(String text){
         notificacion=new NotificationCompat.Builder(this);
         notificacion.setSmallIcon(R.drawable.ic_business_center_black_24dp);
+        notificacion.setTicker("Base de Datos Actualizada");
         notificacion.setContentTitle("Base de Datos Actualizada");
         notificacion.setContentText(text);
-        NotificationManager nm=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        notificacion.setDefaults(NotificationCompat.DEFAULT_SOUND);
+        NotificationManagerCompat nm=NotificationManagerCompat.from(getApplicationContext());
         nm.notify(idUnica,notificacion.build());
     }
 }
