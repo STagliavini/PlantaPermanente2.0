@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -46,6 +47,7 @@ public class empleados extends Fragment {
     View view;
     Map<String,Object> itempas;
     SharedPreferences sp;
+    AlertDialog dialog;
 @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -177,11 +179,12 @@ public class empleados extends Fragment {
                     LayoutInflater inflater=getLayoutInflater();
                     View vieww=inflater.inflate(R.layout.cuadro_accion_empleado,null);
                     builder.setView(vieww);
-                    AlertDialog dialog=builder.create();
+                    dialog=builder.create();
                     dialog.show();
                     Button btnContact=vieww.findViewById(R.id.btnContact);
                     Button btnMail=vieww.findViewById(R.id.btnMail);
                     Button btnMapa=vieww.findViewById(R.id.btnMapaemp);
+                    Button btnModificar=vieww.findViewById(R.id.btnModificar);
                     if(sp.getString("tipo","").equals("Empleado")){
                         btnContact.setVisibility(View.GONE);
                         btnMail.setVisibility(View.GONE);
@@ -228,6 +231,21 @@ public class empleados extends Fragment {
                             pam.putString("dni",dni);
                             intencion.putExtras(pam);
                             startActivity(intencion);
+                        }
+                    });
+                    btnModificar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentTransaction ft=getFragmentManager().beginTransaction();
+                            String dni=itempas.get("dni").toString().substring(5);
+                            Bundle pam=new Bundle();
+                            pam.putString("dni",dni);
+                            modificar_empleado me=new modificar_empleado();
+                            me.setArguments(pam);
+                            ft.replace(R.id.nav_host_fragment,me);
+                            ft.addToBackStack(null);
+                            ft.commit();
+                            dialog.dismiss();
                         }
                     });
                 }
