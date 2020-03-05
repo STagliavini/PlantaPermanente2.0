@@ -117,11 +117,6 @@ public class modificar_empleado extends Fragment {
             if(error_telefono.getText().toString().isEmpty()&&error_mail.getText().toString().isEmpty()
             &&error_direccion.getText().toString().isEmpty()&&error_nacimiento.getText().toString().isEmpty()){
                 actualizar("https://tagliavinilab6.000webhostapp.com/actualizarEmpleado.php");
-                empleados emp=new empleados();
-                ft=fm.beginTransaction();
-                ft.replace(R.id.nav_host_fragment,emp);
-                ft.addToBackStack(null);
-                ft.commit();
             }
         }
     });
@@ -186,6 +181,11 @@ private void actualizar(String URL){
         public void onResponse(String response) {
             if(response.contains("Actualizado")){
                 Toast.makeText(getContext(),"Empleado Actualizado",Toast.LENGTH_LONG).show();
+                empleados emp=new empleados();
+                ft=fm.beginTransaction();
+                ft.replace(R.id.nav_host_fragment,emp);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         }
     }, new Response.ErrorListener() {
