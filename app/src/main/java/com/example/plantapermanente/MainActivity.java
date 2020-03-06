@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         error_usuario=(TextView)findViewById(R.id.errorUsuario);
         error_contrasenia=(TextView)findViewById(R.id.errorPassword);
         sp=getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-        if(sp.getBoolean("recor",false)==true){
+        if(sp.getBoolean("recor",false)==true&&!sp.getString("tipo","").equals("anonimo")){
             recor.setChecked(true);
             usu.setText(sp.getString("usuario",""));
             cont.setText(sp.getString("contrasenia",""));
