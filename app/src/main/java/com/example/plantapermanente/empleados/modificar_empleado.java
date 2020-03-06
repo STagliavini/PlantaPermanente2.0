@@ -116,7 +116,7 @@ public class modificar_empleado extends Fragment {
             }
             if(error_telefono.getText().toString().isEmpty()&&error_mail.getText().toString().isEmpty()
             &&error_direccion.getText().toString().isEmpty()&&error_nacimiento.getText().toString().isEmpty()){
-                actualizar(R.string.host+"actualizarEmpleado.php");
+                actualizar(getResources().getString(R.string.host)+"actualizarEmpleado.php");
             }
         }
     });
