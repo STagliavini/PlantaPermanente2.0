@@ -52,7 +52,7 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
         mMap = googleMap;
         Bundle pam=getIntent().getExtras();
         dni=pam.getString("dni");
-        listarPuntos("https://tagliavinilab6.000webhostapp.com/listarPuntosEmpleados.php");
+        listarPuntos(getResources().getString(R.string.host)+"listarPuntosEmpleados.php");
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -62,7 +62,7 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        agregarPunto("https://tagliavinilab6.000webhostapp.com/agregarPuntosEmpleados.php");
+                        agregarPunto(getResources().getString(R.string.host)+"agregarPuntosEmpleados.php");
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -83,7 +83,7 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                eliminarPunto("https://tagliavinilab6.000webhostapp.com/borrarPuntosEmpleados.php");
+                                eliminarPunto(getResources().getString(R.string.host)+"borrarPuntosEmpleados.php");
                             }
                         });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

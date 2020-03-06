@@ -85,7 +85,7 @@ public class cambiar_contrasenia extends Fragment {
             coinciden=true;
         }
         if(errorRepetir.getText().toString().isEmpty()&&errorNueva.getText().toString().isEmpty()&&coinciden){
-            actualizar("https://tagliavinilab6.000webhostapp.com/actualizarContrasenia.php");
+            actualizar(getResources().getString(R.string.host)+"actualizarContrasenia.php");
         }
         else{
             if(!coinciden){

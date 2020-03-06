@@ -28,11 +28,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.plantapermanente.R;
+import com.example.plantapermanente.no_autorizado;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +62,12 @@ public class empleados extends Fragment {
         dni.setEnabled(false);
         dni.setText(sp.getString("usuario",""));
     }
+    else{
+        if(sp.getString("tipo","").equals("anonimo")){
+            FragmentTransaction ft=getFragmentManager().beginTransaction();
+            ft.replace(R.id.nav_host_fragment,new no_autorizado()).addToBackStack(null).commit();
+        }
+    }
     dni.addTextChangedListener(new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -68,7 +76,7 @@ public class empleados extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            traerEmpleados("https://tagliavinilab6.000webhostapp.com/listarEmpleados.php");
+            traerEmpleados(getResources().getString(R.string.host)+"listarEmpleados.php");
         }
 
         @Override
@@ -84,7 +92,7 @@ public class empleados extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            traerEmpleados("https://tagliavinilab6.000webhostapp.com/listarEmpleados.php");
+            traerEmpleados(getResources().getString(R.string.host)+"listarEmpleados.php");
         }
 
         @Override
@@ -100,7 +108,7 @@ public class empleados extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            traerEmpleados("https://tagliavinilab6.000webhostapp.com/listarEmpleados.php");
+            traerEmpleados(getResources().getString(R.string.host)+"listarEmpleados.php");
         }
 
         @Override
@@ -108,7 +116,7 @@ public class empleados extends Fragment {
 
         }
     });
-    traerEmpleados("https://tagliavinilab6.000webhostapp.com/listarEmpleados.php");
+    traerEmpleados(getResources().getString(R.string.host)+"listarEmpleados.php");
     return view;
     }
     private void traerEmpleados(String URL) {

@@ -72,7 +72,7 @@ public class modificar_empleado extends Fragment {
     error_direccion=(TextView)view.findViewById(R.id.errorDireccion);
     error_nacimiento=(TextView)view.findViewById(R.id.errorNacimiento);
     fm=getFragmentManager();
-    traerDatos("https://tagliavinilab6.000webhostapp.com/traerEmpleado.php");
+    traerDatos(getResources().getString(R.string.host)+"traerEmpleado.php");
     btnCancelar.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -116,7 +116,7 @@ public class modificar_empleado extends Fragment {
             }
             if(error_telefono.getText().toString().isEmpty()&&error_mail.getText().toString().isEmpty()
             &&error_direccion.getText().toString().isEmpty()&&error_nacimiento.getText().toString().isEmpty()){
-                actualizar("https://tagliavinilab6.000webhostapp.com/actualizarEmpleado.php");
+                actualizar(R.string.host+"actualizarEmpleado.php");
             }
         }
     });
