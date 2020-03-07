@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     error_contrasenia.setText("");
                 }
                 if(error_usuario.getText().toString().isEmpty()&&error_contrasenia.getText().toString().isEmpty()){
-                    verificarUsuario(getResources().getString(R.string.host)+"consultarLogin.php");
+                    verificarUsuario(getResources().getString(R.string.host2)+"consultarLogin.php");
                 }
             }
         });

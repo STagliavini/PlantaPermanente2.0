@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -116,7 +117,7 @@ public class empleados extends Fragment {
 
         }
     });
-    traerEmpleados(getResources().getString(R.string.host)+"listarEmpleados.php");
+    traerEmpleados(getResources().getString(R.string.host)+"PlantaPermanente/webresources/entidades.empleado/listado_filtrado");
     return view;
     }
     private void traerEmpleados(String URL) {
@@ -126,6 +127,7 @@ public class empleados extends Fragment {
                 JSONArray ja=null;
                 try{
                     ja=new JSONArray(response);
+                    Toast.makeText(getContext(),response,Toast.LENGTH_LONG).show();
                 }
                 catch (JSONException e){
 
@@ -135,6 +137,7 @@ public class empleados extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),"ERROR"+error.getMessage(),Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -150,6 +153,17 @@ public class empleados extends Fragment {
                     parametros.put("nombre_empleado",nom.getText().toString());
                 }
                 return parametros;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
+                return parametros;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
             }
         };
         RequestQueue rq= Volley.newRequestQueue(this.getContext());
