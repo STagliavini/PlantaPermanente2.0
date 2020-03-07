@@ -2,9 +2,12 @@ package com.example.plantapermanente;
 
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -67,11 +70,17 @@ public class Recibos extends Fragment {
     DatePickerDialog dpd;
     Calendar c;
     int dia,mes,anio=2020;
+    SharedPreferences sp;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_recibos, container, false);
+        sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+        if(sp.getString("tipo","").equals("anonimo")){
+            FragmentTransaction ft=getFragmentManager().beginTransaction();
+            ft.replace(R.id.nav_host_fragment,new no_autorizado()).addToBackStack(null).commit();
+        }
         edtDni=view.findViewById(R.id.edtDnii);
         edtFecha_Inicial=view.findViewById(R.id.edtFecha_Inicial);
         edtFecha_Final=view.findViewById(R.id.edtFecha_Final);
