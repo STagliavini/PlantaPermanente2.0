@@ -1,6 +1,7 @@
 package com.example.plantapermanente;
 
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -31,7 +33,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +47,8 @@ public class Recibos extends Fragment {
     private List<Map<String, Object>> recibos;
     View view;
     EditText edtDni;
+    EditText edtFecha_Inicial;
+    EditText edtFecha_Final;
     Spinner organismo;
     Spinner cargo;
     Spinner categoria;
@@ -54,16 +62,25 @@ public class Recibos extends Fragment {
     String nombre_organismo="Seleccionar un Organismo";
     String nombre_cargo="Seleccionar un Cargo";
     String codigo_categoria="Seleccionar una Categoria";
+    String fecha_inicial="";
+    String fecha_final="";
+    DatePickerDialog dpd;
+    Calendar c;
+    int dia,mes,anio=2020;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_recibos, container, false);
         edtDni=view.findViewById(R.id.edtDnii);
+        edtFecha_Inicial=view.findViewById(R.id.edtFecha_Inicial);
+        edtFecha_Final=view.findViewById(R.id.edtFecha_Final);
+        edtFecha_Inicial.setText("");
+        edtFecha_Final.setText("");
         organismo=(Spinner)view.findViewById(R.id.spinOrganismo);
         cargo=(Spinner)view.findViewById(R.id.spinCargo);
         categoria=(Spinner)view.findViewById(R.id.spinCategoria);
-        llenarSpinners(getResources().getString(R.string.host)+"listarRecibos.php");
+        llenarSpinners(getResources().getString(R.string.host2)+"listarRecibos.php");
         edtDni.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -72,7 +89,7 @@ public class Recibos extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
             }
 
             @Override
@@ -84,7 +101,7 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 nombre_organismo=parent.getItemAtPosition(position).toString();
-                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
             }
 
             @Override
@@ -96,7 +113,7 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 nombre_cargo=parent.getItemAtPosition(position).toString();
-                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
             }
 
             @Override
@@ -108,7 +125,7 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 codigo_categoria=parent.getItemAtPosition(position).toString();
-                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
             }
 
             @Override
@@ -116,7 +133,89 @@ public class Recibos extends Fragment {
 
             }
         });
-        traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+        edtFecha_Inicial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dia=1;
+                dpd=new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        edtFecha_Inicial.setText((month+1)+"/"+year);
+                        Date date=null;
+                        try{
+                            date=new SimpleDateFormat("yyyy-MM-dd").parse(year+"-"+(month+1)+"-"+dayOfMonth);
+                        }catch(ParseException e){
+
+                        }
+                        c=Calendar.getInstance();
+                        c.setTime(date);
+                        dia=c.getActualMaximum(Calendar.DAY_OF_MONTH);
+                        mes=c.get(Calendar.MONTH)+1;
+                        anio=c.get(Calendar.YEAR);
+                        fecha_inicial=anio+"-"+mes+"-"+dia;
+                    }
+                },anio,mes-1,dia);
+                dpd.show();
+            }
+        });
+        edtFecha_Final.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dia=1;
+                dpd=new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        edtFecha_Final.setText((month+1)+"/"+year);
+                        Date date=null;
+                        try{
+                            date=new SimpleDateFormat("yyyy-MM-dd").parse(year+"-"+(month+1)+"-"+dayOfMonth);
+                        }catch(ParseException e){
+
+                        }
+                        c=Calendar.getInstance();
+                        c.setTime(date);
+                        dia=c.getActualMaximum(Calendar.DAY_OF_MONTH);
+                        mes=c.get(Calendar.MONTH)+1;
+                        anio=c.get(Calendar.YEAR);
+                        fecha_final=anio+"-"+mes+"-"+dia;
+                    }
+                },anio,mes-1,dia);
+                dpd.show();
+            }
+        });
+        edtFecha_Inicial.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edtFecha_Final.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
         return view;
     }
     private void traerRecibos(String URL){
@@ -143,6 +242,8 @@ public class Recibos extends Fragment {
                 parametros.put("nombre_organismo",nombre_organismo);
                 parametros.put("nombre_cargo",nombre_cargo);
                 parametros.put("codigo_categoria",codigo_categoria);
+                parametros.put("fecha_inicial",fecha_inicial);
+                parametros.put("fecha_final",fecha_final);
                 return parametros;
             }
         };
@@ -152,8 +253,8 @@ public class Recibos extends Fragment {
     private void llenarLista(JSONArray ja){
         try{
             listrec=(ListView)view.findViewById(R.id.listrec);
-            String[] datos = {"dni", "organismo", "cargo", "categoria","sueldo_total"};
-            int[] vistas = {R.id.dni, R.id.organismo,R.id.cargo, R.id.categoria, R.id.sueldo_total};
+            String[] datos = {"dni", "organismo", "cargo", "categoria","sueldo_total","fecha_liquidacion"};
+            int[] vistas = {R.id.dni, R.id.organismo,R.id.cargo, R.id.categoria, R.id.sueldo_total,R.id.fecha_liquidacion};
             recibos=new ArrayList<Map<String, Object>>();
             JSONObject jo=null;
             Map<String, Object> item;
@@ -165,6 +266,7 @@ public class Recibos extends Fragment {
                 item.put("cargo", "Cargo: "+jo.getString("nombre_cargo"));
                 item.put("categoria", "Categoria: "+jo.getString("codigo_categoria"));
                 item.put("sueldo_total", "Sueldo Total: "+jo.getString("total_sueldo"));
+                item.put("fecha_liquidacion", "Fecha de Liquidacion: "+jo.getString("fecha_liquidacion"));
                 recibos.add(item);
             }
             SimpleAdapter adaptador =

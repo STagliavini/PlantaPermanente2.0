@@ -57,12 +57,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        actualizarBase(getResources().getString(R.string.host)+"listarOrganismos.php");
+        actualizarBase(getResources().getString(R.string.host2)+"listarOrganismos.php");
         dba.abrir();
         Cursor cursor=dba.getOrganismos();
         cursor.moveToFirst();
         for(int j=0;j<cursor.getCount();j++){
-        System.out.println(cursor.getString(cursor.getColumnIndex("id_organismo")));
         cursor.moveToNext();
         }
         dba.cerrar();
