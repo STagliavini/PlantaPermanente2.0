@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                                         !jo.getString("mail_organismo").equals(cursor.getString(5))||
                                         jo.getInt("estado_organismo")!=cursor.getInt(6)||
                                     lat_punto!=cursor.getFloat(7)||
-                                        lat_punto!=cursor.getFloat(8)){
+                                        long_punto!=cursor.getFloat(8)){
                                     dba.actualizarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
                                                 jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
 
