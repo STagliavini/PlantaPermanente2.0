@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.textclassifier.ConversationActions;
 import android.widget.Button;
@@ -57,118 +58,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        actualizarBase(getResources().getString(R.string.host)+"listarOrganismos.php");
+        actualizarBase(getResources().getString(R.string.host) + "listarOrganismos.php");
         dba.abrir();
-        Cursor cursor=dba.getOrganismos();
+        Cursor cursor = dba.getOrganismos();
         cursor.moveToFirst();
-        for(int j=0;j<cursor.getCount();j++){
-        cursor.moveToNext();
+        for (int j = 0; j < cursor.getCount(); j++) {
+            cursor.moveToNext();
         }
         dba.cerrar();
-        inises=(Button)findViewById(R.id.btnLogin);
-        anonimo=(Button)findViewById(R.id.btnAnom);
-        usu=(EditText) findViewById(R.id.edtUsuario);
-        cont=(EditText)findViewById(R.id.edtPassword);
-        recor=(Switch)findViewById(R.id.mantses);
-        error_usuario=(TextView)findViewById(R.id.errorUsuario);
-        error_contrasenia=(TextView)findViewById(R.id.errorPassword);
-        sp=getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-        if(sp.getBoolean("recor",false)==true&&!sp.getString("tipo","").equals("anonimo")){
-            recor.setChecked(true);
-            usu.setText(sp.getString("usuario",""));
-            cont.setText(sp.getString("contrasenia",""));
-        }
-        inises.setOnClickListener(new View.OnClickListener() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onClick(View v) {
-                if(usu.getText().toString().isEmpty()){
-                    error_usuario.setText("Debe ingresar un usuario");
-                }
-                else{
-                    error_usuario.setText("");
-                }
-                if(cont.getText().toString().isEmpty()){
-                    error_contrasenia.setText("Debe ingresar una contrasenia");
-                }
-                else{
-                    error_contrasenia.setText("");
-                }
-                if(error_usuario.getText().toString().isEmpty()&&error_contrasenia.getText().toString().isEmpty()){
-                    verificarUsuario(getResources().getString(R.string.host)+"consultarLogin.php");
-                }
-            }
-        });
-        anonimo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sp=getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-                editor=sp.edit();
-                editor.putString("usuario","anonimo");
-                editor.putString("contrasenia","anonimo");
-                editor.putString("tipo","anonimo");
-                editor.commit();
-                Intent intencion=new Intent(getApplicationContext(),MenuDrawer.class);
+            public void run() {
+                Intent intencion=new Intent(MainActivity.this,MenuDrawer.class);
                 startActivity(intencion);
-            }
-        });
-        recor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(recor.isChecked()==false){
-                    sp=getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-                    editor=sp.edit();
-                    editor.putBoolean("recor",false);
-                    editor.commit();
-                }
-            }
-        });
-    }
-    private void verificarUsuario(String URL){
-        StringRequest jsonRequest= new StringRequest(Request.Method.POST,URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if(!response.isEmpty()){
-                    try{
-                        JSONObject jo=new JSONObject(response);
-                        sp=getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-                        editor=sp.edit();
-                        editor.putString("usuario",jo.getString("nombre_usuario"));
-                        editor.putString("contrasenia",jo.getString("contrasenia_usuario"));
-                        editor.putString("tipo",jo.getString("tipo_usuario"));
-                        if(recor.isChecked()){
-                            editor.putBoolean("recor",true);
-                        }
-                        else{
-                            editor.putBoolean("recor",false);
-                        }
-                        editor.commit();
-                        Intent intencion=new Intent(getApplicationContext(),MenuDrawer.class);
-                        startActivity(intencion);
-                    }
-                    catch (JSONException e){
-                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"Usuario o contrasenia incorrectos",Toast.LENGTH_LONG).show();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this,error.toString(),Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros=new HashMap<>();
-                parametros.put("usuario",usu.getText().toString());
-                parametros.put("contrasenia",cont.getText().toString());
-                return parametros;
-            }
-        };
-        RequestQueue requestQueue= Volley.newRequestQueue(this);
-        requestQueue.add(jsonRequest);
+                finish();
+            };
+        },3000);
     }
     private void actualizarBase(String URL){
         dba=new DBAdapter(this);
