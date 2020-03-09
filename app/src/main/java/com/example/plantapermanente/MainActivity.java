@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        actualizarBase(getResources().getString(R.string.host2)+"listarOrganismos.php");
+        actualizarBase(getResources().getString(R.string.host)+"listarOrganismos.php");
         dba.abrir();
         Cursor cursor=dba.getOrganismos();
         cursor.moveToFirst();
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     error_contrasenia.setText("");
                 }
                 if(error_usuario.getText().toString().isEmpty()&&error_contrasenia.getText().toString().isEmpty()){
-                    verificarUsuario(getResources().getString(R.string.host2)+"consultarLogin.php");
+                    verificarUsuario(getResources().getString(R.string.host)+"consultarLogin.php");
                 }
             }
         });

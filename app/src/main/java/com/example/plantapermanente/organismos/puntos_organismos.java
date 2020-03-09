@@ -58,7 +58,7 @@ public class puntos_organismos extends AppCompatActivity implements OnMapReadyCa
         Bundle pam=getIntent().getExtras();
         id=pam.getString("codigo");
         sp= getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-        listarPuntos(R.string.host+"listarPuntosOrganismos.php");
+        listarPuntos(getResources().getString(R.string.host)+"listarPuntosOrganismos.php");
         if(!sp.getString("tipo","").equals("Empleado")&&!sp.getString("tipo","").equals("anonimo")){
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
@@ -95,7 +95,7 @@ public class puntos_organismos extends AppCompatActivity implements OnMapReadyCa
                                         }
                                     }
                                     dba.cerrar();
-                                    agregarPunto(R.string.host+"agregarPuntosOrganismos.php");
+                                    agregarPunto(getResources().getString(R.string.host)+"agregarPuntosOrganismos.php");
                                 }
                             });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

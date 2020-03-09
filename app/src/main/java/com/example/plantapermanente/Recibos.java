@@ -89,7 +89,7 @@ public class Recibos extends Fragment {
         organismo=(Spinner)view.findViewById(R.id.spinOrganismo);
         cargo=(Spinner)view.findViewById(R.id.spinCargo);
         categoria=(Spinner)view.findViewById(R.id.spinCategoria);
-        llenarSpinners(getResources().getString(R.string.host2)+"listarRecibos.php");
+        llenarSpinners(getResources().getString(R.string.host)+"listarRecibos.php");
         edtDni.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -98,7 +98,7 @@ public class Recibos extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
             }
 
             @Override
@@ -110,7 +110,7 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 nombre_organismo=parent.getItemAtPosition(position).toString();
-                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
             }
 
             @Override
@@ -122,7 +122,7 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 nombre_cargo=parent.getItemAtPosition(position).toString();
-                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
             }
 
             @Override
@@ -134,7 +134,7 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 codigo_categoria=parent.getItemAtPosition(position).toString();
-                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
             }
 
             @Override
@@ -200,7 +200,7 @@ public class Recibos extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
             }
 
             @Override
@@ -216,7 +216,7 @@ public class Recibos extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
             }
 
             @Override
@@ -224,7 +224,7 @@ public class Recibos extends Fragment {
 
             }
         });
-        traerRecibos(getResources().getString(R.string.host2)+"listarRecibos.php");
+        traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
         return view;
     }
     private void traerRecibos(String URL){
