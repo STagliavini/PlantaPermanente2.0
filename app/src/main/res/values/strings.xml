@@ -8,8 +8,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="host">http://192.168.1.33:33035/</string>
-    <string name="host2">https://tagliavinilab6.000webhostapp.com/</string>
+    <string name="host">https://tagliavinilab6.000webhostapp.com/</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>

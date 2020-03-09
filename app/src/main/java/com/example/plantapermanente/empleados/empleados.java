@@ -117,7 +117,7 @@ public class empleados extends Fragment {
 
         }
     });
-    traerEmpleados(getResources().getString(R.string.host)+"PlantaPermanente/webresources/entidades.empleado/listado_filtrado");
+    traerEmpleados(getResources().getString(R.string.host)+"listarEmpleados.php");
     return view;
     }
     private void traerEmpleados(String URL) {
@@ -127,7 +127,6 @@ public class empleados extends Fragment {
                 JSONArray ja=null;
                 try{
                     ja=new JSONArray(response);
-                    Toast.makeText(getContext(),response,Toast.LENGTH_LONG).show();
                 }
                 catch (JSONException e){
 

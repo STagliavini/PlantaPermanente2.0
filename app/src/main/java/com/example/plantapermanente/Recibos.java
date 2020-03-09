@@ -1,14 +1,22 @@
 package com.example.plantapermanente;
 
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -71,19 +80,30 @@ public class Recibos extends Fragment {
     Calendar c;
     int dia,mes,anio=2020;
     SharedPreferences sp;
+    AlertDialog dialog;
+    Map<String,Object> itempas;
+    View vieww;
+    String dni,nombre;
+    private static final int PERMISSION_STORAGE_CODE=1000;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_recibos, container, false);
         sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+        edtDni=view.findViewById(R.id.edtDnii);
+        edtFecha_Inicial=view.findViewById(R.id.edtFecha_Inicial);
+        edtFecha_Final=view.findViewById(R.id.edtFecha_Final);
         if(sp.getString("tipo","").equals("anonimo")){
             FragmentTransaction ft=getFragmentManager().beginTransaction();
             ft.replace(R.id.nav_host_fragment,new no_autorizado()).addToBackStack(null).commit();
         }
-        edtDni=view.findViewById(R.id.edtDnii);
-        edtFecha_Inicial=view.findViewById(R.id.edtFecha_Inicial);
-        edtFecha_Final=view.findViewById(R.id.edtFecha_Final);
+        else{
+            if(sp.getString("tipo","").equals("Empleado")){
+                edtDni.setText(sp.getString("usuario",""));
+                edtDni.setEnabled(false);
+            }
+        }
         edtFecha_Inicial.setText("");
         edtFecha_Final.setText("");
         organismo=(Spinner)view.findViewById(R.id.spinOrganismo);
@@ -262,8 +282,10 @@ public class Recibos extends Fragment {
     private void llenarLista(JSONArray ja){
         try{
             listrec=(ListView)view.findViewById(R.id.listrec);
-            String[] datos = {"dni", "organismo", "cargo", "categoria","sueldo_total","fecha_liquidacion"};
-            int[] vistas = {R.id.dni, R.id.organismo,R.id.cargo, R.id.categoria, R.id.sueldo_total,R.id.fecha_liquidacion};
+            String[] datos = {"dni", "organismo", "cargo", "categoria","sueldo_total","fecha_liquidacion","codigo_empleado"
+            ,"id_organismo","id_cargo","id_categoria"};
+            int[] vistas = {R.id.dni, R.id.organismo,R.id.cargo, R.id.categoria, R.id.sueldo_total,R.id.fecha_liquidacion,
+            R.id.codigo_empleado,R.id.id_organismo,R.id.id_cargo,R.id.id_categoria};
             recibos=new ArrayList<Map<String, Object>>();
             JSONObject jo=null;
             Map<String, Object> item;
@@ -276,12 +298,61 @@ public class Recibos extends Fragment {
                 item.put("categoria", "Categoria: "+jo.getString("codigo_categoria"));
                 item.put("sueldo_total", "Sueldo Total: "+jo.getString("total_sueldo"));
                 item.put("fecha_liquidacion", "Fecha de Liquidacion: "+jo.getString("fecha_liquidacion"));
+                item.put("codigo_empleado", jo.getString("codigo_empleado"));
+                item.put("id_organismo", jo.getString("id_organismo"));
+                item.put("id_cargo", jo.getString("id_cargo"));
+                item.put("id_categoria", jo.getString("id_categoria"));
                 recibos.add(item);
             }
             SimpleAdapter adaptador =
                     new SimpleAdapter(this.getContext(), recibos,
                             R.layout.item_rec, datos, vistas);
             listrec.setAdapter(adaptador);
+            listrec.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    itempas = recibos.get(position);
+                    AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                    LayoutInflater inflater=getLayoutInflater();
+                    View vieww=inflater.inflate(R.layout.cuadro_accion_recibo,null);
+                    builder.setView(vieww);
+                    dialog=builder.create();
+                    dialog.show();
+                    Button btnImprimir=(Button)vieww.findViewById(R.id.btnImprimir);
+                    btnImprimir.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                            dni=itempas.get("dni").toString().substring(5);
+                            nombre=itempas.get("codigo_empleado").toString()+itempas.get("id_organismo").toString()+
+                            itempas.get("id_cargo").toString()+itempas.get("id_categoria").toString();
+                            String anio="";
+                            String mes="";
+                            Date date=null;
+                            try{
+                                date=new SimpleDateFormat("yyyy-MM-dd").parse(itempas.get("fecha_liquidacion").toString().substring(22));
+                                mes=new SimpleDateFormat("MM").format(date);
+                                anio=new SimpleDateFormat("yyyy").format(date);
+                            }catch(ParseException e){
+                                Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                            }
+                            nombre=nombre+mes+"_"+anio;
+                            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                                if(getContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)==
+                                        PackageManager.PERMISSION_DENIED){
+                                    String[] permissions={Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                                    requestPermissions(permissions,PERMISSION_STORAGE_CODE);
+                                }
+                                else{
+                                    iniciarDescarga();                    }
+                            }
+                            else {
+                                iniciarDescarga();
+                            }
+                        }
+                    });
+                }
+            });
         }catch(JSONException e){
 
         }
@@ -363,5 +434,33 @@ public class Recibos extends Fragment {
         };
         RequestQueue rq= Volley.newRequestQueue(getContext());
         rq.add(sr);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode){
+            case PERMISSION_STORAGE_CODE:{
+                if(grantResults.length>0&&grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                    iniciarDescarga();
+                }
+                else{
+                    Toast.makeText(getContext(),"Permiso Denegado...!!!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+    private void iniciarDescarga(){
+        System.out.println(nombre);
+        System.out.println(dni);
+        DownloadManager.Request request=new DownloadManager.Request(Uri.parse(getResources().getString(R.string.host)+dni+"/"+nombre+".pdf"));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setTitle("Recibo de Sueldo");
+        request.setDescription("Descargando Documento...");
+        request.setAllowedOverMetered(true);
+        request.setAllowedOverRoaming(true);
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,nombre+".pdf");
+        DownloadManager dm=(DownloadManager)getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        dm.enqueue(request);
     }
 }
