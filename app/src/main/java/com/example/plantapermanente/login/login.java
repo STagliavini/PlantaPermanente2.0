@@ -103,19 +103,6 @@ public class login extends Fragment {
                 }
             }
         });
-        anonimo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-                editor=sp.edit();
-                editor.putString("usuario","anonimo");
-                editor.putString("contrasenia","anonimo");
-                editor.putString("tipo","anonimo");
-                editor.commit();
-                Intent intencion=new Intent(getContext(), MenuDrawer.class);
-                startActivity(intencion);
-            }
-        });
         recor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -148,8 +135,11 @@ public class login extends Fragment {
                             editor.putBoolean("recor",false);
                         }
                         editor.commit();
-                        Intent intencion=new Intent(getContext(),MenuDrawer.class);
-                        startActivity(intencion);
+                        if(sp.getString("tipo","").equals("Admin")){
+                            Intent intencion=new Intent(getContext(),MenuDrawer.class);
+                            startActivity(intencion);
+                            getActivity().finish();
+                        }
                     }
                     catch (JSONException e){
                         Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_SHORT).show();

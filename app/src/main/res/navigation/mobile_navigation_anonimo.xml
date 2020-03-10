@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation_anonimo"
+    app:startDestination="@+id/nav_organismos">
+
+    <fragment
+        android:id="@+id/nav_organismos"
+        android:label="Organismos"
+        android:name="com.example.plantapermanente.organismos.organismos"
+        />
+    <fragment
+        android:id="@+id/nav_login"
+        android:label="Iniciar Sesion"
+        android:name="com.example.plantapermanente.login.login"
+        />
+</navigation>

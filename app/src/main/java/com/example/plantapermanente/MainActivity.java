@@ -58,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sp=getSharedPreferences("Sesion",MODE_PRIVATE);
+        editor=sp.edit();
+        editor.putString("usuario","anonimo");
+        editor.putString("contrasenia","anonimo");
+        editor.putString("tipo","anonimo");
+        editor.commit();
         actualizarBase(getResources().getString(R.string.host) + "listarOrganismos.php");
         dba.abrir();
         Cursor cursor = dba.getOrganismos();
@@ -69,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intencion=new Intent(MainActivity.this,MenuDrawer.class);
+                Intent intencion=new Intent(MainActivity.this,MenuDrawerAnonimo.class);
                 startActivity(intencion);
                 finish();
             };

@@ -1,6 +1,5 @@
 package com.example.plantapermanente;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,30 +21,27 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 
-public class MenuDrawer extends AppCompatActivity {
+public class MenuDrawerAnonimo extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sp=getSharedPreferences("Sesion",MODE_PRIVATE);
-        setContentView(R.layout.activity_menu_drawer);
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        setContentView(R.layout.activity_menu_drawer_anonimo);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_empleados,R.id.nav_organismos,R.id.nav_recibos,R.id.nav_login,R.id.nav_clave,R.id.nav_logout)
-                        .setDrawerLayout(drawer)
-                        .build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_organismos,R.id.nav_login)
+                .setDrawerLayout(drawer)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
-
-
 
     @Override
     public boolean onSupportNavigateUp() {
