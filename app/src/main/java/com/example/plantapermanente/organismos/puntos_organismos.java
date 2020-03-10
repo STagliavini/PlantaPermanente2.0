@@ -137,7 +137,7 @@ public class puntos_organismos extends AppCompatActivity implements OnMapReadyCa
                                         }
                                     }
                                     dba.cerrar();
-                                    eliminarPunto(R.string.host+"borrarPuntosOrganismos.php");
+                                    eliminarPunto(getResources().getString(R.string.host)+"borrarPuntosOrganismos.php");
                                 }
                             });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
