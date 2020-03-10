@@ -129,7 +129,7 @@ public class empleados extends Fragment {
                     ja=new JSONArray(response);
                 }
                 catch (JSONException e){
-
+                    Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
                 }
                 llenarLista(ja);
             }

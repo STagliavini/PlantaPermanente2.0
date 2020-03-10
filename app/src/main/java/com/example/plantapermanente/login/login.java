@@ -126,8 +126,8 @@ public class login extends Fragment {
                         sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
                         editor=sp.edit();
                         editor.putString("usuario",jo.getString("nombre_usuario"));
-                        editor.putString("contrasenia",jo.getString("contrasenia_usuario"));
-                        editor.putString("tipo",jo.getString("tipo_usuario"));
+                            editor.putString("contrasenia",jo.getString("contrasenia_usuario"));
+                            editor.putString("tipo",jo.getString("tipo_usuario"));
                         if(recor.isChecked()){
                             editor.putBoolean("recor",true);
                         }
@@ -160,6 +160,18 @@ public class login extends Fragment {
                 Map<String, String> parametros=new HashMap<>();
                 parametros.put("usuario",usu.getText().toString());
                 parametros.put("contrasenia",cont.getText().toString());
+                return parametros;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
                 return parametros;
             }
         };
