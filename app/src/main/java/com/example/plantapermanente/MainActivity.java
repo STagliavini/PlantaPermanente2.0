@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sp;
     SharedPreferences.Editor editor;
     DBAdapter dba;
+    DBAdapter back;
     NotificationCompat.Builder notificacion;
     Cursor cursorr;
     int metodo;
@@ -68,13 +69,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("tipo","anonimo");
         editor.commit();
         actualizarBase(getResources().getString(R.string.host2) + "entity.organismo/listado_filtrado");
-        dba.abrir();
-        Cursor cursor = dba.getOrganismos();
-        cursor.moveToFirst();
-        for (int j = 0; j < cursor.getCount(); j++) {
-            cursor.moveToNext();
-        }
-        dba.cerrar();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -95,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                         ja=new JSONArray(response);
                         dba.abrir();
                         Cursor cursor=dba.getOrganismos();
+                        Toast.makeText(getApplicationContext(),cursor.getCount(),Toast.LENGTH_LONG).show();
                         JSONObject jo=null;
                         boolean insertado=false;
                         boolean actualizado=false;
@@ -110,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             jos=jo;
                             cursorr=cursor;
+                            back=dba;
                             if(!existe){
                                 metodo=0;
                                 cotejarPuntos(getResources().getString(R.string.host2) + "entity.puntosorganismo/listado");
@@ -142,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray ja=null;
                     try{
                         ja=new JSONArray(response);
+                        Toast.makeText(getApplicationContext(),cursorr.getCount(),Toast.LENGTH_LONG).show();
                         JSONObject js=null;
                         boolean cotejado=false;
                         boolean insertado=false;
@@ -175,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                             long_punto=0;
                         }
                         if (metodo == 0) {
-                            dba.insertarOrganismo(jos.getInt("idOrganismo"),jos.getInt("codigoOrganismo"),jos.getString("nombreOrganismo"),
+                            back.insertarOrganismo(jos.getInt("idOrganismo"),jos.getInt("codigoOrganismo"),jos.getString("nombreOrganismo"),
                                     jos.getString("telefonoOrganismo"),jos.getString("direccionOrganismo"),jos.getString("mailOrganismo"),estado_organismo,lat_punto,long_punto);
                             insertado=true;
                         }
@@ -190,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                                         jos.getInt("estadoOrganismo")!=cursorr.getInt(6)||
                                         lat_punto!=cursorr.getFloat(7)||
                                         long_punto!=cursorr.getFloat(8)){
-                                    dba.actualizarOrganismo(jos.getInt("idOrganismo"),jos.getInt("codigoOrganismo"),jos.getString("nombreOrganismo"),
+                                    back.actualizarOrganismo(jos.getInt("idOrganismo"),jos.getInt("codigoOrganismo"),jos.getString("nombreOrganismo"),
                                             jos.getString("telefonoOrganismo"),jos.getString("direccionOrganismo"),jos.getString("mailOrganismo"),estado_organismo,lat_punto,long_punto);
 
                                     actualizado=true;
