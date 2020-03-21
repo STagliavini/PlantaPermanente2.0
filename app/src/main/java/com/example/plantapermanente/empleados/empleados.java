@@ -36,7 +36,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +81,7 @@ public class empleados extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            traerEmpleados(getResources().getString(R.string.host)+"listarEmpleados.php");
+            traerEmpleados(getResources().getString(R.string.host2)+"entity.empleado/listado_filtrado");
         }
 
         @Override
@@ -93,7 +97,7 @@ public class empleados extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            traerEmpleados(getResources().getString(R.string.host)+"listarEmpleados.php");
+            traerEmpleados(getResources().getString(R.string.host2)+"entity.empleado/listado_filtrado");
         }
 
         @Override
@@ -109,7 +113,7 @@ public class empleados extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            traerEmpleados(getResources().getString(R.string.host)+"listarEmpleados.php");
+            traerEmpleados(getResources().getString(R.string.host2)+"entity.empleado/listado_filtrado");
         }
 
         @Override
@@ -117,7 +121,7 @@ public class empleados extends Fragment {
 
         }
     });
-    traerEmpleados(getResources().getString(R.string.host)+"listarEmpleados.php");
+    traerEmpleados(getResources().getString(R.string.host2)+"entity.empleado/listado_filtrado");
     return view;
     }
     private void traerEmpleados(String URL) {
@@ -179,13 +183,16 @@ public class empleados extends Fragment {
             for(int i=0;i<ja.length();i++){
                 jo=ja.getJSONObject(i);
                 item = new HashMap<String, Object>();
-                item.put("dni", "DNI: "+jo.getLong("dni_empleado"));
-                item.put("apnom", "Apellido y Nombre: "+jo.getString("apellido_empleado")+" "+jo.getString("nombre_empleado"));
-                item.put("fecnac", "Fecha de Nacimiento"+jo.getString("nacimiento_empleado"));
-                item.put("sexo", "Sexo: "+jo.getString("sexo_empleado"));
-                item.put("telefono", "Telefono: "+jo.getString("telefono_empleado"));
-                item.put("direccion", "Direccion: "+jo.getString("direccion_empleado"));
-                item.put("mail", "Mail: "+jo.getString("mail_empleado"));
+                Date date=new Date(Long.parseLong(jo.getString("nacimientoEmpleado")));
+                String fecha;
+                fecha=new SimpleDateFormat("yyyy-MM-dd").format(date);
+                item.put("dni", "DNI: "+jo.getLong("dniEmpleado"));
+                item.put("apnom", "Apellido y Nombre: "+jo.getString("apellidoEmpleado")+" "+jo.getString("nombreEmpleado"));
+                item.put("fecnac", "Fecha de Nacimiento: "+fecha);
+                item.put("sexo", "Sexo: "+jo.getString("sexoEmpleado"));
+                item.put("telefono", "Telefono: "+jo.getString("telefonoEmpleado"));
+                item.put("direccion", "Direccion: "+jo.getString("direccionEmpleado"));
+                item.put("mail", "Mail: "+jo.getString("mailEmpleado"));
                 empleados.add(item);
             }
             SimpleAdapter adaptador =

@@ -99,7 +99,7 @@ public class login extends Fragment {
                     error_contrasenia.setText("");
                 }
                 if(error_usuario.getText().toString().isEmpty()&&error_contrasenia.getText().toString().isEmpty()){
-                    verificarUsuario(getResources().getString(R.string.host)+"consultarLogin.php");
+                    verificarUsuario(getResources().getString(R.string.host2)+"entity.usuario/listado_filtrado");
                 }
             }
         });
@@ -120,14 +120,14 @@ public class login extends Fragment {
         StringRequest jsonRequest= new StringRequest(Request.Method.POST,URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if(!response.isEmpty()){
+                if(!response.equals("[]")){
                     try{
-                        JSONObject jo=new JSONObject(response);
+                        JSONArray jo=new JSONArray(response);
                         sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
                         editor=sp.edit();
-                        editor.putString("usuario",jo.getString("nombre_usuario"));
-                            editor.putString("contrasenia",jo.getString("contrasenia_usuario"));
-                            editor.putString("tipo",jo.getString("tipo_usuario"));
+                        editor.putString("usuario",jo.getJSONObject(0).getString("nombreUsuario"));
+                            editor.putString("contrasenia",jo.getJSONObject(0).getString("contraseniaUsuario"));
+                            editor.putString("tipo",jo.getJSONObject(0).getString("tipoUsuario"));
                         if(recor.isChecked()){
                             editor.putBoolean("recor",true);
                         }
@@ -158,8 +158,8 @@ public class login extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros=new HashMap<>();
-                parametros.put("usuario",usu.getText().toString());
-                parametros.put("contrasenia",cont.getText().toString());
+                parametros.put("nombre_usuario",usu.getText().toString());
+                parametros.put("contrasenia_usuario",cont.getText().toString());
                 return parametros;
             }
 

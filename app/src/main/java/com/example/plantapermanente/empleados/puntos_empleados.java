@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,7 +53,7 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
         mMap = googleMap;
         Bundle pam=getIntent().getExtras();
         dni=pam.getString("dni");
-        listarPuntos(getResources().getString(R.string.host)+"listarPuntosEmpleados.php");
+        listarPuntos(getResources().getString(R.string.host2)+"entity.puntosempleado/listado");
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -62,7 +63,7 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        agregarPunto(getResources().getString(R.string.host)+"agregarPuntosEmpleados.php");
+                        agregarPunto(getResources().getString(R.string.host2)+"entity.puntosempleado/agregar");
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -83,7 +84,7 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                eliminarPunto(getResources().getString(R.string.host)+"borrarPuntosEmpleados.php");
+                                eliminarPunto(getResources().getString(R.string.host2)+"entity.puntosempleado/borrar");
                             }
                         });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -110,7 +111,7 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
         StringRequest sr= new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if(response.contains("PuntoExiste")){
+                if(!response.equals("[]")){
                     Toast.makeText(puntos_empleados.this,"Ya existe un punto",Toast.LENGTH_LONG).show();
                 }
                 else{
@@ -131,6 +132,17 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
                 parametros.put("long_punto",Double.toString(lt.longitude));
                 return parametros;
             }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
+                return parametros;
+            }
         };
         RequestQueue rq= Volley.newRequestQueue(this);
         rq.add(sr);
@@ -140,9 +152,9 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onResponse(String response) {
                 try {
-                    JSONObject jo=new JSONObject(response);
-                    Double latitud=Double.parseDouble(jo.getString("lat_punto"));
-                    Double longitud=Double.parseDouble(jo.getString("long_punto"));
+                    JSONArray jo=new JSONArray(response);
+                    Double latitud=Double.parseDouble(jo.getJSONObject(0).getString("latPunto"));
+                    Double longitud=Double.parseDouble(jo.getJSONObject(0).getString("longPunto"));
                     lt=new LatLng(latitud,longitud);
                     mMap.addMarker(new MarkerOptions().position(lt).title(dni).draggable(true));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lt,16.0f));
@@ -154,13 +166,24 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(puntos_empleados.this,error.getMessage(),Toast.LENGTH_LONG).show();
             }
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> parametros=new HashMap<>();
                 parametros.put("dni_empleado",dni.substring(5));
+                return parametros;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
                 return parametros;
             }
         };
@@ -183,6 +206,17 @@ public class puntos_empleados extends AppCompatActivity implements OnMapReadyCal
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> parametros=new HashMap<>();
                 parametros.put("dni_empleado",dni.substring(5));
+                return parametros;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
                 return parametros;
             }
         };

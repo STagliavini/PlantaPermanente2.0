@@ -28,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.plantapermanente.MenuDrawer;
 import com.example.plantapermanente.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,7 +73,7 @@ public class modificar_empleado extends Fragment {
     error_direccion=(TextView)view.findViewById(R.id.errorDireccion);
     error_nacimiento=(TextView)view.findViewById(R.id.errorNacimiento);
     fm=getFragmentManager();
-    traerDatos(getResources().getString(R.string.host)+"traerEmpleado.php");
+    traerDatos(getResources().getString(R.string.host2)+"entity.empleado/listado_filtrado");
     btnCancelar.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -116,7 +117,7 @@ public class modificar_empleado extends Fragment {
             }
             if(error_telefono.getText().toString().isEmpty()&&error_mail.getText().toString().isEmpty()
             &&error_direccion.getText().toString().isEmpty()&&error_nacimiento.getText().toString().isEmpty()){
-                actualizar(getResources().getString(R.string.host)+"actualizarEmpleado.php");
+                actualizar(getResources().getString(R.string.host2)+"entity.empleado/modificar");
             }
         }
     });
@@ -140,12 +141,11 @@ private void traerDatos(String URL){
         @Override
         public void onResponse(String response) {
             try{
-                JSONObject jo=new JSONObject(response);
-                edtTelefono.setText(jo.getString("telefono_empleado"));
-                edtMail.setText(jo.getString("mail_empleado"));
-                edtDireccion.setText(jo.getString("direccion_empleado"));
-                SimpleDateFormat df4=new SimpleDateFormat("yyyy-MM-dd");
-                Date form=df4.parse(jo.getString("nacimiento_empleado"));
+                JSONArray jo=new JSONArray(response);
+                edtTelefono.setText(jo.getJSONObject(0).getString("telefonoEmpleado"));
+                edtMail.setText(jo.getJSONObject(0).getString("mailEmpleado"));
+                edtDireccion.setText(jo.getJSONObject(0).getString("direccionEmpleado"));
+                Date form=new Date(Long.parseLong(jo.getJSONObject(0).getString("nacimientoEmpleado")));
                 Calendar c=Calendar.getInstance();
                 c.setTime(form);
                 dia=c.get(Calendar.DAY_OF_MONTH);
@@ -153,10 +153,8 @@ private void traerDatos(String URL){
                 anio=c.get(Calendar.YEAR);
                 edtNacimiento.setText(dia+"/"+mes+"/"+anio);
                 nacimiento=anio+"-"+mes+"-"+dia;
-            }catch (JSONException e){
-                Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
-            }catch (ParseException e){
-                Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+            }catch (JSONException e) {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }, new Response.ErrorListener() {
@@ -171,6 +169,17 @@ private void traerDatos(String URL){
             parametros.put("dni_empleado",getArguments().getString("dni",""));
             return parametros;
         }
+        @Override
+        public String getBodyContentType() {
+            return "application/x-www-form-urlencoded";
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> parametros=new HashMap<>();
+            parametros.put("Content-Type","application/x-www-form-urlencoded");
+            return parametros;
+        }
     };
     RequestQueue rq= Volley.newRequestQueue(this.getContext());
     rq.add(sr);
@@ -179,7 +188,7 @@ private void actualizar(String URL){
     StringRequest sr=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
-            if(response.contains("Actualizado")){
+            if(!response.equals("[]")){
                 Toast.makeText(getContext(),"Empleado Actualizado",Toast.LENGTH_LONG).show();
                 empleados emp=new empleados();
                 ft=fm.beginTransaction();
@@ -202,6 +211,17 @@ private void actualizar(String URL){
             parametros.put("mail_empleado",edtMail.getText().toString());
             parametros.put("direccion_empleado",edtDireccion.getText().toString());
             parametros.put("nacimiento_empleado",nacimiento);
+            return parametros;
+        }
+        @Override
+        public String getBodyContentType() {
+            return "application/x-www-form-urlencoded";
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> parametros=new HashMap<>();
+            parametros.put("Content-Type","application/x-www-form-urlencoded");
             return parametros;
         }
     };
