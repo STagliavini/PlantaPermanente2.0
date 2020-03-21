@@ -58,7 +58,7 @@ public class puntos_organismos extends AppCompatActivity implements OnMapReadyCa
         Bundle pam=getIntent().getExtras();
         id=pam.getString("codigo");
         sp= getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-        listarPuntos(getResources().getString(R.string.host)+"listarPuntosOrganismos.php");
+        listarPuntos(getResources().getString(R.string.host2)+"entity.puntosorganismo/listado");
         if(!sp.getString("tipo","").equals("Empleado")&&!sp.getString("tipo","").equals("anonimo")){
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
@@ -191,6 +191,16 @@ public class puntos_organismos extends AppCompatActivity implements OnMapReadyCa
                 parametros.put("long_punto",Double.toString(lt.longitude));
                 return parametros;
             }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
+                return parametros;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
         };
         RequestQueue rq= Volley.newRequestQueue(this);
         rq.add(sr);
@@ -242,6 +252,16 @@ public class puntos_organismos extends AppCompatActivity implements OnMapReadyCa
                 Map<String,String> parametros=new HashMap<>();
                 parametros.put("codigo_organismop",id.substring(8));
                 return parametros;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
+                return parametros;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
             }
         };
         RequestQueue rq= Volley.newRequestQueue(this);

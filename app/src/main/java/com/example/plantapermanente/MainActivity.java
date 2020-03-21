@@ -48,10 +48,13 @@ public class MainActivity extends AppCompatActivity {
     Switch recor;
     TextView error_usuario;
     TextView error_contrasenia;
+    JSONObject jos;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
     DBAdapter dba;
     NotificationCompat.Builder notificacion;
+    Cursor cursorr;
+    int metodo;
     private static final int idUnica=51623;
     private static final String CHANNEL_ID="Notificacion";
     @Override
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("contrasenia","anonimo");
         editor.putString("tipo","anonimo");
         editor.commit();
-        actualizarBase(getResources().getString(R.string.host) + "listarOrganismos.php");
+        actualizarBase(getResources().getString(R.string.host2) + "entity.organismo/listado_filtrado");
         dba.abrir();
         Cursor cursor = dba.getOrganismos();
         cursor.moveToFirst();
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         StringRequest jsonRequest=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
         @Override
             public void onResponse(String response) {
-                if(!response.isEmpty()){
+                if(!response.equals("[]")){
                     JSONArray ja=null;
                     try{
                         ja=new JSONArray(response);
@@ -100,64 +103,97 @@ public class MainActivity extends AppCompatActivity {
                             jo=ja.getJSONObject(i);
                             cursor.moveToFirst();
                             for(int j=0;j<cursor.getCount()&&!existe;j++){
-                                if(cursor.getInt(0)==jo.getInt("id_organismo")){
+                                if(cursor.getInt(0)==jo.getInt("idOrganismo")){
                                     existe=true;
                                 }
                                 cursor.moveToNext();
                             }
+                            jos=jo;
+                            cursorr=cursor;
                             if(!existe){
-                                boolean estado_organismo=false;
-                                float lat_punto;
-                                float long_punto;
-                                if(jo.getInt("estado_organismo")==1){
-                                    estado_organismo=true;
-                                }
-                                else{
-                                    estado_organismo=false;
-                                }
-                                try{
-                                    lat_punto=Float.parseFloat(jo.getString("lat_punto"));
-                                    long_punto=Float.parseFloat(jo.getString("long_punto"));
-                                }
-                                catch(NumberFormatException e){
-                                    lat_punto=0;
-                                    long_punto=0;
-                                }
-                                dba.insertarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
-                                            jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
-                                insertado=true;
+                                metodo=0;
+                                cotejarPuntos(getResources().getString(R.string.host2) + "entity.puntosorganismo/listado");
                             }
                             else{
-                                boolean estado_organismo=false;
-                                float lat_punto;
-                                float long_punto;
-                                if(jo.getInt("estado_organismo")==1){
-                                    estado_organismo=true;
-                                }
-                                else{
-                                    estado_organismo=false;
-                                }
-                                try{
-                                    lat_punto=Float.parseFloat(jo.getString("lat_punto"));
-                                    long_punto=Float.parseFloat(jo.getString("long_punto"));
-                                }
-                                catch(NumberFormatException e){
-                                    lat_punto=0;
-                                    long_punto=0;
-                                }
-                                cursor.moveToPrevious();
-                                if(jo.getInt("codigo_organismo")!=cursor.getInt(1)||
-                                   !jo.getString("nombre_organismo").equals(cursor.getString(2))||
-                                   !jo.getString("telefono_organismo").equals(cursor.getString(3))||
-                                   !jo.getString("direccion_organismo").equals(cursor.getString(4))||
-                                        !jo.getString("mail_organismo").equals(cursor.getString(5))||
-                                        jo.getInt("estado_organismo")!=cursor.getInt(6)||
-                                    lat_punto!=cursor.getFloat(7)||
-                                        long_punto!=cursor.getFloat(8)){
-                                    dba.actualizarOrganismo(jo.getInt("id_organismo"),jo.getInt("codigo_organismo"),jo.getString("nombre_organismo"),
-                                                jo.getString("telefono_organismo"),jo.getString("direccion_organismo"),jo.getString("mail_organismo"),estado_organismo,lat_punto,long_punto);
+                                metodo=1;
+                                cotejarPuntos(getResources().getString(R.string.host2) + "entity.puntosorganismo/listado");
+                            }
+                        }
+                        dba.cerrar();
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue requestQueue= Volley.newRequestQueue(this);
+        requestQueue.add(jsonRequest);
+    }
+    private void cotejarPuntos(String URL){
+        StringRequest jsonRequest=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(!response.equals("[]")){
+                    JSONArray ja=null;
+                    try{
+                        ja=new JSONArray(response);
+                        JSONObject js=null;
+                        boolean cotejado=false;
+                        boolean insertado=false;
+                        boolean actualizado=false;
+                        int i=0;
+                        while(i<ja.length()&&!cotejado){
+                            js=ja.getJSONObject(i);
+                            if(jos.getInt("codigoOrganismo")==js.getInt("codigoOrganismop")){
+                                cotejado=true;
+                            }
+                            else{
+                                i++;
+                            }
+                        }
+                        float lat_punto;
+                        float long_punto;
+                        boolean estado_organismo=false;
+                        estado_organismo=jos.getBoolean("estadoOrganismo");
+                        try{
+                            if(cotejado){
+                                lat_punto=Float.parseFloat(js.getString("latPunto"));
+                                long_punto=Float.parseFloat(js.getString("longPunto"));
+                            }
+                            else{
+                                lat_punto=0;
+                                long_punto=0;
+                            }
+                        }
+                        catch(NumberFormatException e){
+                            lat_punto=0;
+                            long_punto=0;
+                        }
+                        if (metodo == 0) {
+                            dba.insertarOrganismo(jos.getInt("idOrganismo"),jos.getInt("codigoOrganismo"),jos.getString("nombreOrganismo"),
+                                    jos.getString("telefonoOrganismo"),jos.getString("direccionOrganismo"),jos.getString("mailOrganismo"),estado_organismo,lat_punto,long_punto);
+                            insertado=true;
+                        }
+                        else{
+                            if(metodo==1){
+                                cursorr.moveToPrevious();
+                                if(jos.getInt("codigoOrganismo")!=cursorr.getInt(1)||
+                                        !jos.getString("nombreOrganismo").equals(cursorr.getString(2))||
+                                        !jos.getString("telefonoOrganismo").equals(cursorr.getString(3))||
+                                        !jos.getString("direccionOrganismo").equals(cursorr.getString(4))||
+                                        !jos.getString("mailOrganismo").equals(cursorr.getString(5))||
+                                        jos.getInt("estadoOrganismo")!=cursorr.getInt(6)||
+                                        lat_punto!=cursorr.getFloat(7)||
+                                        long_punto!=cursorr.getFloat(8)){
+                                    dba.actualizarOrganismo(jos.getInt("idOrganismo"),jos.getInt("codigoOrganismo"),jos.getString("nombreOrganismo"),
+                                            jos.getString("telefonoOrganismo"),jos.getString("direccionOrganismo"),jos.getString("mailOrganismo"),estado_organismo,lat_punto,long_punto);
 
-                                 actualizado=true;
+                                    actualizado=true;
                                 }
                             }
                         }
@@ -169,8 +205,7 @@ public class MainActivity extends AppCompatActivity {
                             createNotificationChannel();
                             mostrarNotificacion("Anteriores registros fueron actualizados en su base de datos local");
                         }
-                        dba.cerrar();
-                    }catch (Exception e){
+                    }catch(JSONException e){
                         Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
                     }
                 }
@@ -178,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue requestQueue= Volley.newRequestQueue(this);
