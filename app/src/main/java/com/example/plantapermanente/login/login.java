@@ -127,7 +127,7 @@ public class login extends Fragment {
                             editor.putBoolean("recor",false);
                         }
                         editor.commit();
-                        if(sp.getString("tipo","").equals("Admin")){
+                        if(sp.getString("tipo","").equals("Admin")||sp.getString("tipo","").equals("Empleado")){
                             Intent intencion=new Intent(getContext(),MenuDrawer.class);
                             startActivity(intencion);
                             getActivity().finish();
