@@ -109,7 +109,9 @@ public class Recibos extends Fragment {
         organismo=(Spinner)view.findViewById(R.id.spinOrganismo);
         cargo=(Spinner)view.findViewById(R.id.spinCargo);
         categoria=(Spinner)view.findViewById(R.id.spinCategoria);
-        llenarSpinners(getResources().getString(R.string.host)+"listarRecibos.php");
+        llenarSpinnerOrganismo(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_organismos");
+        llenarSpinnerCargo(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_cargos");
+        llenarSpinnerCategoria(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_categorias");
         edtDni.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -118,7 +120,7 @@ public class Recibos extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
             }
 
             @Override
@@ -130,7 +132,7 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 nombre_organismo=parent.getItemAtPosition(position).toString();
-                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
             }
 
             @Override
@@ -142,7 +144,7 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 nombre_cargo=parent.getItemAtPosition(position).toString();
-                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
             }
 
             @Override
@@ -154,7 +156,7 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 codigo_categoria=parent.getItemAtPosition(position).toString();
-                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
             }
 
             @Override
@@ -220,7 +222,7 @@ public class Recibos extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
             }
 
             @Override
@@ -236,7 +238,7 @@ public class Recibos extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+                traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
             }
 
             @Override
@@ -244,7 +246,7 @@ public class Recibos extends Fragment {
 
             }
         });
-        traerRecibos(getResources().getString(R.string.host)+"listarRecibos.php");
+        traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
         return view;
     }
     private void traerRecibos(String URL){
@@ -275,6 +277,17 @@ public class Recibos extends Fragment {
                 parametros.put("fecha_final",fecha_final);
                 return parametros;
             }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
+                return parametros;
+            }
         };
         RequestQueue rq= Volley.newRequestQueue(getContext());
         rq.add(sr);
@@ -287,21 +300,21 @@ public class Recibos extends Fragment {
             int[] vistas = {R.id.dni, R.id.organismo,R.id.cargo, R.id.categoria, R.id.sueldo_total,R.id.fecha_liquidacion,
             R.id.codigo_empleado,R.id.id_organismo,R.id.id_cargo,R.id.id_categoria};
             recibos=new ArrayList<Map<String, Object>>();
-            JSONObject jo=null;
+            JSONArray jo=null;
             Map<String, Object> item;
             for(int i=0;i<ja.length();i++){
-                jo=ja.getJSONObject(i);
+                jo=ja.getJSONArray(i);
                 item = new HashMap<String, Object>();
-                item.put("dni", "DNI: "+jo.getLong("dni_empleado"));
-                item.put("organismo", "Organismo: "+jo.getString("nombre_organismo"));
-                item.put("cargo", "Cargo: "+jo.getString("nombre_cargo"));
-                item.put("categoria", "Categoria: "+jo.getString("codigo_categoria"));
-                item.put("sueldo_total", "Sueldo Total: "+jo.getString("total_sueldo"));
-                item.put("fecha_liquidacion", "Fecha de Liquidacion: "+jo.getString("fecha_liquidacion"));
-                item.put("codigo_empleado", jo.getString("codigo_empleado"));
-                item.put("id_organismo", jo.getString("id_organismo"));
-                item.put("id_cargo", jo.getString("id_cargo"));
-                item.put("id_categoria", jo.getString("id_categoria"));
+                item.put("dni", "DNI: "+jo.getJSONObject(4).getLong("dniEmpleado"));
+                item.put("organismo", "Organismo: "+jo.getJSONObject(1).getString("nombreOrganismo"));
+                item.put("cargo", "Cargo: "+jo.getJSONObject(2).getString("nombreCargo"));
+                item.put("categoria", "Categoria: "+jo.getJSONObject(3).getString("codigoCategoria"));
+                item.put("sueldo_total", "Sueldo Total: "+jo.getJSONObject(0).getString("totalSueldo"));
+                item.put("fecha_liquidacion", "Fecha de Liquidacion: "+jo.getJSONObject(0).getString("fechaLiquidacion"));
+                item.put("codigo_empleado", jo.getJSONObject(4).getString("codigoEmpleado"));
+                item.put("id_organismo", jo.getJSONObject(0).getString("idOrganismo"));
+                item.put("id_cargo", jo.getJSONObject(0).getString("idCargo"));
+                item.put("id_categoria", jo.getJSONObject(0).getString("idCategoria"));
                 recibos.add(item);
             }
             SimpleAdapter adaptador =
@@ -357,7 +370,7 @@ public class Recibos extends Fragment {
 
         }
     }
-    private void llenarSpinners(String URL){
+    private void llenarSpinnerOrganismo(String URL){
         StringRequest sr=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -374,12 +387,12 @@ public class Recibos extends Fragment {
                         existe=false;
                         jo=ja.getJSONObject(i);
                         for(int j=0;j<organismos.size();j++){
-                            if(jo.getString("nombre_organismo").equals(organismos.get(j))){
+                            if(jo.getString("nombreOrganismo").equals(organismos.get(j))){
                                 existe=true;
                             }
                         }
                         if(!existe){
-                            organismos.add(jo.getString("nombre_organismo"));
+                            organismos.add(jo.getString("nombreOrganismo"));
                         }
                     }
                     organismo.setAdapter(dataAdapterOrg);
@@ -391,12 +404,12 @@ public class Recibos extends Fragment {
                         existe=false;
                         jo=ja.getJSONObject(i);
                         for(int j=0;j<cargos.size();j++){
-                            if(jo.getString("nombre_cargo").equals(cargos.get(j))){
+                            if(jo.getString("nombreCargo").equals(cargos.get(j))){
                                 existe=true;
                             }
                         }
                         if(!existe){
-                            cargos.add(jo.getString("nombre_cargo"));
+                            cargos.add(jo.getString("nombreCargo"));
                         }
                     }
                     cargo.setAdapter(dataAdapterCar);
@@ -408,12 +421,12 @@ public class Recibos extends Fragment {
                         existe=false;
                         jo=ja.getJSONObject(i);
                         for(int j=0;j<categorias.size();j++){
-                            if(jo.getString("codigo_categoria").equals(categorias.get(j))){
+                            if(jo.getString("codigoCategoria").equals(categorias.get(j))){
                                 existe=true;
                             }
                         }
                         if(!existe){
-                            categorias.add(jo.getString("codigo_categoria"));
+                            categorias.add(jo.getString("codigoCategoria"));
                         }
                     }
                     categoria.setAdapter(dataAdapterCat);
@@ -429,6 +442,127 @@ public class Recibos extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String>parametros=new HashMap<>();
+                return parametros;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
+                return parametros;
+            }
+        };
+        RequestQueue rq= Volley.newRequestQueue(getContext());
+        rq.add(sr);
+    }
+    private void llenarSpinnerCargo(String URL){
+        StringRequest sr=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray ja=null;
+                try{
+                    boolean existe=false;
+                    cargos=new ArrayList<>();
+                    cargos.add("Seleccionar un Cargo");
+                    dataAdapterCar=new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,cargos);
+                    dataAdapterCar.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    ja=new JSONArray(response);
+                    JSONObject jo=null;
+                    for(int i=0;i<ja.length();i++){
+                        existe=false;
+                        jo=ja.getJSONObject(i);
+                        for(int j=0;j<cargos.size();j++){
+                            if(jo.getString("nombreCargo").equals(cargos.get(j))){
+                                existe=true;
+                            }
+                        }
+                        if(!existe){
+                            cargos.add(jo.getString("nombreCargo"));
+                        }
+                    }
+                    cargo.setAdapter(dataAdapterCar);
+                }catch(JSONException e){
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String>parametros=new HashMap<>();
+                return parametros;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
+                return parametros;
+            }
+        };
+        RequestQueue rq= Volley.newRequestQueue(getContext());
+        rq.add(sr);
+    }
+    private void llenarSpinnerCategoria(String URL){
+        StringRequest sr=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray ja=null;
+                try{
+                    boolean existe=false;
+                    categorias=new ArrayList<>();
+                    categorias.add("Seleccionar una Categoria");
+                    dataAdapterCat=new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,categorias);
+                    dataAdapterCat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    ja=new JSONArray(response);
+                    JSONObject jo=null;
+                    for(int i=0;i<ja.length();i++){
+                        existe=false;
+                        jo=ja.getJSONObject(i);
+                        for(int j=0;j<categorias.size();j++){
+                            if(jo.getString("codigoCategoria").equals(categorias.get(j))){
+                                existe=true;
+                            }
+                        }
+                        if(!existe){
+                            categorias.add(jo.getString("codigoCategoria"));
+                        }
+                    }
+                    categoria.setAdapter(dataAdapterCat);
+                }catch(JSONException e){
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String>parametros=new HashMap<>();
+                return parametros;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
                 return parametros;
             }
         };
