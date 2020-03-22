@@ -95,7 +95,7 @@ public class puntos_organismos extends AppCompatActivity implements OnMapReadyCa
                                         }
                                     }
                                     dba.cerrar();
-                                    agregarPunto(getResources().getString(R.string.host)+"agregarPuntosOrganismos.php");
+                                    agregarPunto(getResources().getString(R.string.host2)+"entity.puntosorganismo/agregar");
                                 }
                             });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -137,7 +137,7 @@ public class puntos_organismos extends AppCompatActivity implements OnMapReadyCa
                                         }
                                     }
                                     dba.cerrar();
-                                    eliminarPunto(getResources().getString(R.string.host)+"borrarPuntosOrganismos.php");
+                                    eliminarPunto(getResources().getString(R.string.host2)+"entity.puntosorganismo/borrar");
                                 }
                             });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -165,7 +165,7 @@ public class puntos_organismos extends AppCompatActivity implements OnMapReadyCa
         StringRequest sr= new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if(response.contains("PuntoExiste")){
+                if(!response.equals("[]")){
                     Toast.makeText(puntos_organismos.this,"Ya existe un punto",Toast.LENGTH_LONG).show();
                 }
                 else{

@@ -63,14 +63,6 @@ public class login extends Fragment {
                              Bundle savedInstanceState) {
 
         view=inflater.inflate(R.layout.fragment_login, container, false);
-        actualizarBase(getResources().getString(R.string.host)+"listarOrganismos.php");
-        dba.abrir();
-        Cursor cursor=dba.getOrganismos();
-        cursor.moveToFirst();
-        for(int j=0;j<cursor.getCount();j++){
-            cursor.moveToNext();
-        }
-        dba.cerrar();
         inises=(Button)view.findViewById(R.id.btnLogin);
         usu=(EditText) view.findViewById(R.id.edtUsuario);
         cont=(EditText)view.findViewById(R.id.edtPassword);
