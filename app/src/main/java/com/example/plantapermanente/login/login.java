@@ -129,7 +129,7 @@ public class login extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(),error.toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),error.toString()+"hola",Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -211,7 +211,13 @@ public class login extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros=new HashMap<>();
-                parametros.put("dni_empleado",usu.getText().toString());
+                sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+                if(!sp.getString("tipo","").equals("Empleado")){
+                    parametros.put("dni_empleado","");
+                }
+                else{
+                    parametros.put("dni_empleado",usu.getText().toString());
+                }
                 return parametros;
             }
 
