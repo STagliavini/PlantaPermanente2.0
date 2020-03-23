@@ -99,12 +99,15 @@ public class login extends Fragment {
         recor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(recor.isChecked()==false){
-                    sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-                    editor=sp.edit();
-                    editor.putBoolean("recor",false);
-                    editor.commit();
+                sp=getActivity().getSharedPreferences("UsuarioGuardado", Context.MODE_PRIVATE);
+                editor=sp.edit();
+                if(recor.isChecked()){
+                    editor.putBoolean("recor",true);
                 }
+                else{
+                    editor.putBoolean("recor",false);
+                }
+                editor.commit();
             }
         });
         return view;
@@ -116,6 +119,18 @@ public class login extends Fragment {
                 if(!response.equals("[]")){
                     try{
                         ja=new JSONArray(response);
+                        sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+                        editor=sp.edit();
+                        editor.putString("usuario",ja.getJSONObject(0).getString("nombreUsuario"));
+                        editor.putString("contrasenia",ja.getJSONObject(0).getString("contraseniaUsuario"));
+                        editor.putString("tipo",ja.getJSONObject(0).getString("tipoUsuario"));
+                        if(recor.isChecked()){
+                            editor.putBoolean("recor",true);
+                        }
+                        else{
+                            editor.putBoolean("recor",false);
+                        }
+                        editor.commit();
                         contadorSueldos(getResources().getString(R.string.host2)+"entity.recibosueldo/contar");
                     }
                     catch (JSONException e){
@@ -129,7 +144,7 @@ public class login extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(),error.toString()+"hola",Toast.LENGTH_SHORT).show();
+
             }
         }){
             @Override
@@ -160,18 +175,6 @@ public class login extends Fragment {
             @Override
             public void onResponse(String response) {
                 try{
-                        sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-                        editor=sp.edit();
-                        editor.putString("usuario",ja.getJSONObject(0).getString("nombreUsuario"));
-                        editor.putString("contrasenia",ja.getJSONObject(0).getString("contraseniaUsuario"));
-                        editor.putString("tipo",ja.getJSONObject(0).getString("tipoUsuario"));
-                        if(recor.isChecked()){
-                            editor.putBoolean("recor",true);
-                        }
-                        else{
-                            editor.putBoolean("recor",false);
-                        }
-                        editor.commit();
                         if(sp.getString("tipo","").equals("Admin")||sp.getString("tipo","").equals("Empleado")){
                             if(sp.getString("tipo","").equals("Empleado")){
                                     if(sp.getInt("contRecibos",0)!=Integer.parseInt(response)){
