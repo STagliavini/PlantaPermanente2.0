@@ -85,7 +85,7 @@ public class cambiar_contrasenia extends Fragment {
             coinciden=true;
         }
         if(errorRepetir.getText().toString().isEmpty()&&errorNueva.getText().toString().isEmpty()&&coinciden){
-            actualizar(getResources().getString(R.string.host)+"actualizarContrasenia.php");
+            actualizar(getResources().getString(R.string.host2)+"entity.usuario/modificar");
         }
         else{
             if(!coinciden){
@@ -97,7 +97,7 @@ public class cambiar_contrasenia extends Fragment {
         StringRequest sr=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if(response.contains("Actualizado")){
+                if(!response.equals("[]")){
                     Toast.makeText(getContext(),"Clave Actualizada",Toast.LENGTH_LONG).show();
                     sp=getActivity().getSharedPreferences("Sesion",Context.MODE_PRIVATE);
                     editor=sp.edit();
@@ -120,6 +120,17 @@ public class cambiar_contrasenia extends Fragment {
                 sp=getActivity().getSharedPreferences("Sesion",Context.MODE_PRIVATE);
                 parametros.put("nombre_usuario",sp.getString("usuario",""));
                 parametros.put("contrasenia_usuario",edtRepetir.getText().toString());
+                return parametros;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
                 return parametros;
             }
         };

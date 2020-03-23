@@ -52,6 +52,7 @@ public class login extends Fragment {
     Switch recor;
     TextView error_usuario;
     TextView error_contrasenia;
+    JSONArray ja;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
     DBAdapter dba;
@@ -69,7 +70,7 @@ public class login extends Fragment {
         recor=(Switch)view.findViewById(R.id.mantses);
         error_usuario=(TextView)view.findViewById(R.id.errorUsuario);
         error_contrasenia=(TextView)view.findViewById(R.id.errorPassword);
-        sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+        sp=getActivity().getSharedPreferences("UsuarioGuardado", Context.MODE_PRIVATE);
         if(sp.getBoolean("recor",false)==true&&!sp.getString("tipo","").equals("anonimo")){
             recor.setChecked(true);
             usu.setText(sp.getString("usuario",""));
@@ -114,24 +115,8 @@ public class login extends Fragment {
             public void onResponse(String response) {
                 if(!response.equals("[]")){
                     try{
-                        JSONArray jo=new JSONArray(response);
-                        sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-                        editor=sp.edit();
-                        editor.putString("usuario",jo.getJSONObject(0).getString("nombreUsuario"));
-                            editor.putString("contrasenia",jo.getJSONObject(0).getString("contraseniaUsuario"));
-                            editor.putString("tipo",jo.getJSONObject(0).getString("tipoUsuario"));
-                        if(recor.isChecked()){
-                            editor.putBoolean("recor",true);
-                        }
-                        else{
-                            editor.putBoolean("recor",false);
-                        }
-                        editor.commit();
-                        if(sp.getString("tipo","").equals("Admin")||sp.getString("tipo","").equals("Empleado")){
-                            Intent intencion=new Intent(getContext(),MenuDrawer.class);
-                            startActivity(intencion);
-                            getActivity().finish();
-                        }
+                        ja=new JSONArray(response);
+                        contadorSueldos(getResources().getString(R.string.host2)+"entity.recibosueldo/contar");
                     }
                     catch (JSONException e){
                         Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
@@ -170,7 +155,82 @@ public class login extends Fragment {
         RequestQueue requestQueue= Volley.newRequestQueue(getContext());
         requestQueue.add(jsonRequest);
     }
-    private void actualizarBase(String URL){
+    private void contadorSueldos(String URL){
+        StringRequest jsonRequest= new StringRequest(Request.Method.POST,URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                        sp=getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+                        editor=sp.edit();
+                        editor.putString("usuario",ja.getJSONObject(0).getString("nombreUsuario"));
+                        editor.putString("contrasenia",ja.getJSONObject(0).getString("contraseniaUsuario"));
+                        editor.putString("tipo",ja.getJSONObject(0).getString("tipoUsuario"));
+                        if(recor.isChecked()){
+                            editor.putBoolean("recor",true);
+                        }
+                        else{
+                            editor.putBoolean("recor",false);
+                        }
+                        editor.commit();
+                        if(sp.getString("tipo","").equals("Admin")||sp.getString("tipo","").equals("Empleado")){
+                            if(sp.getString("tipo","").equals("Empleado")){
+                                    if(sp.getInt("contRecibos",0)!=Integer.parseInt(response)){
+                                    editor.putInt("contRecibos",Integer.parseInt(response));
+                                    editor.commit();
+                                    createNotificationChannel();
+                                    mostrarNotificacion("Recibiste nuevos cobros");
+                                }
+                            }
+                            sp=getActivity().getSharedPreferences("UsuarioGuardado", Context.MODE_PRIVATE);
+                            editor=sp.edit();
+                            editor.putString("usuario",ja.getJSONObject(0).getString("nombreUsuario"));
+                            editor.putString("contrasenia",ja.getJSONObject(0).getString("contraseniaUsuario"));
+                            editor.putString("tipo",ja.getJSONObject(0).getString("tipoUsuario"));
+                            if(recor.isChecked()){
+                                editor.putBoolean("recor",true);
+                            }
+                            else{
+                                editor.putBoolean("recor",false);
+                            }
+                            editor.commit();
+                            Intent intencion=new Intent(getContext(),MenuDrawer.class);
+                            startActivity(intencion);
+                            getActivity().finish();
+                        }
+                    }
+                    catch (JSONException e){
+                        Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),error.toString(),Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("dni_empleado",usu.getText().toString());
+                return parametros;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue= Volley.newRequestQueue(getContext());
+        requestQueue.add(jsonRequest);
+    }
+    /*private void actualizarBase(String URL){
         dba=new DBAdapter(getContext());
         StringRequest jsonRequest=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -272,7 +332,7 @@ public class login extends Fragment {
         });
         RequestQueue requestQueue= Volley.newRequestQueue(getContext());
         requestQueue.add(jsonRequest);
-    }
+    }*/
     private void createNotificationChannel(){
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
             CharSequence name="canal 1";
@@ -286,9 +346,9 @@ public class login extends Fragment {
     }
     private void mostrarNotificacion(String text){
         notificacion=new NotificationCompat.Builder(getContext(),CHANNEL_ID);
-        notificacion.setSmallIcon(R.drawable.ic_business_center_black_24dp);
-        notificacion.setTicker("Base de Datos Actualizada");
-        notificacion.setContentTitle("Base de Datos Actualizada");
+        notificacion.setSmallIcon(R.drawable.ic_receipt_black_24dp);
+        notificacion.setTicker("Nuevos Recibos Generados");
+        notificacion.setContentTitle("Nuevos Recibos Generados");
         notificacion.setContentText(text);
         notificacion.setDefaults(NotificationCompat.DEFAULT_SOUND);
         NotificationManagerCompat nm=NotificationManagerCompat.from(getContext());
