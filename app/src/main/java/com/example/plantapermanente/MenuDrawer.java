@@ -1,11 +1,13 @@
 package com.example.plantapermanente;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -38,16 +40,40 @@ public class MenuDrawer extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_empleados,R.id.nav_organismos,R.id.nav_recibos,R.id.nav_login,R.id.nav_clave,R.id.nav_logout)
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_empleados,R.id.nav_organismos,R.id.nav_recibos)
                         .setDrawerLayout(drawer)
                         .build();
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
-
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menuadmin, menu);
+        return true;
+    }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.action_logout:{
+                Intent intencion=new Intent(getApplicationContext(),MenuDrawerAnonimo.class);
+                startActivity(intencion);
+                finish();
+            }
+            break;
+            case R.id.action_change_pass:{
+                Intent intencion=new Intent(getApplicationContext(),cambiar_contrasenia.class);
+                startActivity(intencion);
+            }
+            break;
+            default:{
+                return super.onOptionsItemSelected(item);
+            }
+        }
+        return true;
+    }
+@Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)

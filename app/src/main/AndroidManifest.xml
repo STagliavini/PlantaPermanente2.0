@@ -19,10 +19,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name="com.example.plantapermanente.empleados.modificar_empleado_perfil"
+            android:parentActivityName=".MenuDrawerAnonimo">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".cambiar_contrasenia"
+            android:parentActivityName=".MenuDrawerAnonimo">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MenuDrawerAnonimo"
             android:label="@string/title_activity_menu_drawer_anonimo"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

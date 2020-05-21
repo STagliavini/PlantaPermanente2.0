@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".cambiar_contrasenia">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/edtNueva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@android:color/darker_gray"
+            android:drawableLeft="@drawable/icon_lock"
+            android:ems="10"
+            android:hint="Contrasenia Nueva"
+            android:inputType="textPassword"
+            android:paddingLeft="5dp" />
+
+        <TextView
+            android:id="@+id/errorNueva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/edtRepetir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@android:color/darker_gray"
+            android:drawableLeft="@drawable/icon_lock"
+            android:ems="10"
+            android:hint="Repetir Contrasenia"
+            android:inputType="textPassword"
+            android:paddingLeft="5dp" />
+
+        <TextView
+            android:id="@+id/errorRepetir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnCambiarCla"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:background="#1976d2"
+            android:text="Cambiar Contrasenia"
+            android:textColor="#FFF"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

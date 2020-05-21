@@ -8,12 +8,6 @@
     app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/action_modifi_perf"
-                android:orderInCategory="100"
-                android:title="Modificar Perfil"
-                android:icon="@drawable/ic_person_add_black_24dp"
-                app:showAsAction="never" />
-            <item
                 android:id="@+id/action_change_pass"
                 android:orderInCategory="100"
                 android:title="Modificar Clave"

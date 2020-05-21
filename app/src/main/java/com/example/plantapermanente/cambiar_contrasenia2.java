@@ -1,11 +1,16 @@
 package com.example.plantapermanente;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,13 +21,19 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class cambiar_contrasenia extends AppCompatActivity {
+
+public class cambiar_contrasenia2 extends Fragment {
+    View view;
     EditText edtNueva;
     EditText edtRepetir;
     TextView errorNueva;
@@ -30,16 +41,18 @@ public class cambiar_contrasenia extends AppCompatActivity {
     Button btnActualizar;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cambiar_contrasenia);
-        edtNueva=(EditText)findViewById(R.id.edtNueva);
-        edtRepetir=(EditText)findViewById(R.id.edtRepetir);
-        errorNueva=(TextView)findViewById(R.id.errorNueva);
-        errorRepetir=(TextView)findViewById(R.id.errorRepetir);
-        btnActualizar=(Button)findViewById(R.id.btnCambiarCla);
-        sp=getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+@Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view=inflater.inflate(R.layout.fragment_cambiar_contrasenia, container, false);
+        edtNueva=(EditText)view.findViewById(R.id.edtNueva);
+        edtRepetir=(EditText)view.findViewById(R.id.edtRepetir);
+        errorNueva=(TextView)view.findViewById(R.id.errorNueva);
+        errorRepetir=(TextView)view.findViewById(R.id.errorRepetir);
+        btnActualizar=(Button)view.findViewById(R.id.btnCambiarCla);
+        sp=getActivity().getSharedPreferences("Sesion",Context.MODE_PRIVATE);
+
         if(!sp.getString("tipo","").equals("anonimo")){
             btnActualizar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -52,29 +65,20 @@ public class cambiar_contrasenia extends AppCompatActivity {
             edtNueva.setEnabled(false);
             edtRepetir.setEnabled(false);
         }
+        return view;
     }
     private void verificar(){
-        if(!edtNueva.getText().toString().isEmpty()){
-            if(edtNueva.getText().toString().length()>30){
-                errorNueva.setText("No debe exceder los 30 caracteres");
-            }
-            else{
-                errorNueva.setText("");
-            }
+        if(edtNueva.getText().toString().length()>30){
+            errorNueva.setText("No debe exceder los 30 caracteres");
         }
         else{
-            errorNueva.setText("Debe ingresar una contrasenia");
+            errorNueva.setText("");
         }
-        if(!edtRepetir.getText().toString().isEmpty()){
-            if(edtRepetir.getText().toString().length()>30){
-                errorRepetir.setText("No debe exceder los 30 caracteres");
-            }
-            else{
-                errorRepetir.setText("");
-            }
+        if(edtRepetir.getText().toString().length()>30){
+            errorRepetir.setText("No debe exceder los 30 caracteres");
         }
         else{
-            errorRepetir.setText("Debe repetir la contrasenia");
+            errorRepetir.setText("");
         }
         boolean coinciden=false;
         if(edtNueva.getText().toString().equals(edtRepetir.getText().toString())){
@@ -85,7 +89,7 @@ public class cambiar_contrasenia extends AppCompatActivity {
         }
         else{
             if(!coinciden){
-                Toast.makeText(getApplicationContext(),"Las claves deben coincidir",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),"Las claves deben coincidir",Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -94,15 +98,14 @@ public class cambiar_contrasenia extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 if(!response.equals("[]")){
-                    Toast.makeText(getApplicationContext(),"Clave Actualizada",Toast.LENGTH_LONG).show();
-                    sp=getApplicationContext().getSharedPreferences("Sesion",Context.MODE_PRIVATE);
+                    Toast.makeText(getContext(),"Clave Actualizada",Toast.LENGTH_LONG).show();
+                    sp=getActivity().getSharedPreferences("Sesion",Context.MODE_PRIVATE);
                     editor=sp.edit();
                     editor.putString("contrasenia",edtNueva.getText().toString());
                     editor.commit();
-                    finish();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),"Clave No Actualizada",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),"Clave No Actualizada",Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -114,7 +117,7 @@ public class cambiar_contrasenia extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String>parametros=new HashMap<>();
-                sp=getApplicationContext().getSharedPreferences("Sesion",Context.MODE_PRIVATE);
+                sp=getActivity().getSharedPreferences("Sesion",Context.MODE_PRIVATE);
                 parametros.put("nombre_usuario",sp.getString("usuario",""));
                 parametros.put("contrasenia_usuario",edtRepetir.getText().toString());
                 return parametros;
@@ -131,7 +134,7 @@ public class cambiar_contrasenia extends AppCompatActivity {
                 return parametros;
             }
         };
-        RequestQueue rq= Volley.newRequestQueue(getApplicationContext());
+        RequestQueue rq= Volley.newRequestQueue(getContext());
         rq.add(sr);
     }
 }

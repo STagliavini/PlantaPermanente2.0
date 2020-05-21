@@ -16,14 +16,6 @@
             android:id="@+id/nav_recibos"
             android:icon="@drawable/ic_receipt_black_24dp"
             android:title="Recibos de Sueldo" />
-        <item
-            android:id="@+id/nav_clave"
-            android:icon="@drawable/ic_lock_gray_24dp"
-            android:title="Cambiar Clave" />
-        <item
-            android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_first_page_black_24dp"
-            android:title="Cerrar Sesion" />
     </group>
 
 </menu>
