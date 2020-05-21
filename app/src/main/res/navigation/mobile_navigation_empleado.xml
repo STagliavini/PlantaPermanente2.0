@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation_empleado"
+    app:startDestination="@+id/nav_recibos">
+
+    <fragment
+        android:id="@+id/nav_organismos"
+        android:label="Organismos"
+        android:name="com.example.plantapermanente.organismos.organismos"
+    />
+    <fragment
+        android:id="@+id/nav_recibos"
+        android:label="Recibos de Sueldo"
+        android:name="com.example.plantapermanente.Recibos"
+        />
+    <fragment
+        android:id="@+id/nav_clave"
+        android:label="Cambiar Clave"
+        android:name="com.example.plantapermanente.cambiar_contrasenia"
+        />
+</navigation>

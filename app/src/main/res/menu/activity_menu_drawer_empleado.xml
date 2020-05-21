@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_organismos"
+            android:icon="@drawable/ic_business_center_black_24dp"
+            android:title="Organismos" />
+        <item
+            android:id="@+id/nav_recibos"
+            android:icon="@drawable/ic_receipt_black_24dp"
+            android:title="Recibos de Sueldo" />
+        <item
+            android:id="@+id/nav_clave"
+            android:icon="@drawable/ic_lock_gray_24dp"
+            android:title="Cambiar Clave" />
+    </group>
+
+</menu>

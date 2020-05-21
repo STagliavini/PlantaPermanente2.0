@@ -207,15 +207,16 @@ public class empleados extends Fragment {
                     LayoutInflater inflater=getLayoutInflater();
                     View vieww=inflater.inflate(R.layout.cuadro_accion_empleado,null);
                     builder.setView(vieww);
-                    dialog=builder.create();
-                    dialog.show();
+                    if(!sp.getString("tipo","").equals("Empleado")){
+                        dialog=builder.create();
+                        dialog.show();
+                    }
                     Button btnContact=vieww.findViewById(R.id.btnContact);
                     Button btnMail=vieww.findViewById(R.id.btnMail);
                     Button btnMapa=vieww.findViewById(R.id.btnMapaemp);
                     Button btnModificar=vieww.findViewById(R.id.btnModificar);
-                    if(sp.getString("tipo","").equals("Empleado")){
+                    if(sp.getString("tipo","").equals("Admin")){
                         btnContact.setVisibility(View.GONE);
-                        btnMail.setVisibility(View.GONE);
                     }
                     if((itempas.get("telefono").toString().substring(10,itempas.get("telefono").toString().length())).isEmpty()){
                         btnContact.setEnabled(false);

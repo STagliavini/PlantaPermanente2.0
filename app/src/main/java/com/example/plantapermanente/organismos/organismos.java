@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -25,6 +26,8 @@ import com.example.plantapermanente.organismos.SQLITE.DBAdapter;
 import androidx.fragment.app.Fragment;
 
 import com.example.plantapermanente.R;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,11 +43,22 @@ public class organismos extends Fragment {
     Map<String,Object> itempas;
     private List<Map<String, Object>> organismos;
     SharedPreferences sp;
+    CarouselView carouselView;
+    int[] sampleImages = {R.drawable.ministerio,R.drawable.ministerio};
+    ImageListener imageListener = new ImageListener() {
+        @Override
+        public void setImageForPosition(int position, ImageView imageView) {
+            imageView.setImageResource(sampleImages[position]);
+        }
+    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_organismos, container, false);
         sp= getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+        carouselView = (CarouselView) view.findViewById(R.id.carouselView);
+        carouselView.setPageCount(sampleImages.length);
+        carouselView.setImageListener(imageListener);
         codigo=view.findViewById(R.id.edtCodigo);
         nombre=view.findViewById(R.id.edtNombre);
         codigo.addTextChangedListener(new TextWatcher() {

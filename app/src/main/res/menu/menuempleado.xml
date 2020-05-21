@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/icono"
+    android:orderInCategory="100"
+    android:icon="@drawable/ic_person_white_24dp"
+        android:title="Most Icon"
+    app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_modifi_perf"
+                android:orderInCategory="100"
+                android:title="Modificar Perfil"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_change_pass"
+                android:orderInCategory="100"
+                android:title="Modificar Clave"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_logout"
+                android:orderInCategory="100"
+                android:title="Cerrar Sesion"
+                android:icon="@drawable/ic_first_page_black_24dp"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+</menu>

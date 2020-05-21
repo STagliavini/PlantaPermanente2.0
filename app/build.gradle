@@ -36,4 +36,6 @@ dependencies {
     implementation files('MailLibs/mail.jar')
     implementation files('MailLibs/activation.jar')
     implementation files('MailLibs/additionnal.jar')
+    //carousel
+    implementation 'com.synnapps:carouselview:0.1.5'
 }

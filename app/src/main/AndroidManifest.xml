@@ -74,6 +74,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".MenuDrawerEmpleado"
+            android:label="@string/title_activity_menu_drawer_empleado"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

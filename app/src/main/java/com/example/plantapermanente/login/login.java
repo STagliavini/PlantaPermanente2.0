@@ -33,6 +33,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.plantapermanente.MainActivity;
 import com.example.plantapermanente.MenuDrawer;
+import com.example.plantapermanente.MenuDrawerEmpleado;
 import com.example.plantapermanente.R;
 import com.example.plantapermanente.organismos.SQLITE.DBAdapter;
 
@@ -175,30 +176,29 @@ public class login extends Fragment {
             @Override
             public void onResponse(String response) {
                 try{
-                        if(sp.getString("tipo","").equals("Admin")||sp.getString("tipo","").equals("Empleado")){
+                        if(sp.getString("tipo","").equals("Admin")){
+                            guardarUsuario(ja.getJSONObject(0).getString("nombreUsuario"),
+                                    ja.getJSONObject(0).getString("contraseniaUsuario"),
+                                    ja.getJSONObject(0).getString("tipoUsuario"));
+                            Intent intencion=new Intent(getContext(),MenuDrawer.class);
+                            startActivity(intencion);
+                            getActivity().finish();
+                        }
+                        else{
                             if(sp.getString("tipo","").equals("Empleado")){
-                                    if(sp.getInt("contRecibos",0)!=Integer.parseInt(response)){
+                                if(sp.getInt("contRecibos",0)!=Integer.parseInt(response)){
                                     editor.putInt("contRecibos",Integer.parseInt(response));
                                     editor.commit();
                                     createNotificationChannel();
                                     mostrarNotificacion("Recibiste nuevos cobros");
                                 }
+                                guardarUsuario(ja.getJSONObject(0).getString("nombreUsuario"),
+                                        ja.getJSONObject(0).getString("contraseniaUsuario"),
+                                        ja.getJSONObject(0).getString("tipoUsuario"));
+                                Intent intencion=new Intent(getContext(), MenuDrawerEmpleado.class);
+                                startActivity(intencion);
+                                getActivity().finish();
                             }
-                            sp=getActivity().getSharedPreferences("UsuarioGuardado", Context.MODE_PRIVATE);
-                            editor=sp.edit();
-                            editor.putString("usuario",ja.getJSONObject(0).getString("nombreUsuario"));
-                            editor.putString("contrasenia",ja.getJSONObject(0).getString("contraseniaUsuario"));
-                            editor.putString("tipo",ja.getJSONObject(0).getString("tipoUsuario"));
-                            if(recor.isChecked()){
-                                editor.putBoolean("recor",true);
-                            }
-                            else{
-                                editor.putBoolean("recor",false);
-                            }
-                            editor.commit();
-                            Intent intencion=new Intent(getContext(),MenuDrawer.class);
-                            startActivity(intencion);
-                            getActivity().finish();
                         }
                     }
                     catch (JSONException e){
@@ -238,6 +238,19 @@ public class login extends Fragment {
         };
         RequestQueue requestQueue= Volley.newRequestQueue(getContext());
         requestQueue.add(jsonRequest);
+    }
+    private void guardarUsuario(String usuario,String contrasenia,String tipo){
+        sp = getActivity().getSharedPreferences("UsuarioGuardado", Context.MODE_PRIVATE);
+            editor = sp.edit();
+            editor.putString("usuario", usuario);
+            editor.putString("contrasenia", contrasenia);
+            editor.putString("tipo", tipo);
+            if (recor.isChecked()) {
+                editor.putBoolean("recor", true);
+            } else {
+                editor.putBoolean("recor", false);
+            }
+            editor.commit();
     }
     /*private void actualizarBase(String URL){
         dba=new DBAdapter(getContext());
