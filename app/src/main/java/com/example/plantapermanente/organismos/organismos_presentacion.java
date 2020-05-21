@@ -21,9 +21,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.plantapermanente.R;
 import com.example.plantapermanente.empleados.empleado_enviar_mail;
+import com.example.plantapermanente.empleados.empleados;
 import com.example.plantapermanente.organismos.SQLITE.DBAdapter;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageClickListener;
@@ -47,10 +50,13 @@ public class organismos_presentacion extends Fragment {
     CarouselView carouselView;
     int[] sampleImages = {R.drawable.ministerio,R.drawable.ministerio};
     String[]textCarousel;
+    FragmentTransaction ft;
+    FragmentManager fm;
     ViewListener viewListener=new ViewListener() {
         @Override
         public View setViewForPosition(int position) {
             View customView = getLayoutInflater().inflate(R.layout.activity_custom_carousel, null);
+            fm=getFragmentManager();
             ImageView imagen=customView.findViewById(R.id.imagen);
             TextView nombre=customView.findViewById(R.id.nombre_carousel_organismo);
             if(sampleImages.length>position){
@@ -64,7 +70,6 @@ public class organismos_presentacion extends Fragment {
             return customView;
         }
     };
-    Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_organismos_presentacion, container, false);
@@ -76,7 +81,11 @@ public class organismos_presentacion extends Fragment {
         carouselView.setImageClickListener(new ImageClickListener() {
             @Override
             public void onClick(int position) {
-                
+                organismo_detalle od=new organismo_detalle();
+                ft=fm.beginTransaction();
+                ft.replace(R.id.nav_host_fragment,od);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         });
         return view;
