@@ -26,6 +26,7 @@ import com.example.plantapermanente.R;
 import com.example.plantapermanente.empleados.empleado_enviar_mail;
 import com.example.plantapermanente.organismos.SQLITE.DBAdapter;
 import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ImageListener;
 import com.synnapps.carouselview.ViewListener;
 
@@ -63,7 +64,7 @@ public class organismos_presentacion extends Fragment {
             return customView;
         }
     };
-    @Override
+    Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_organismos_presentacion, container, false);
@@ -72,6 +73,12 @@ public class organismos_presentacion extends Fragment {
         carouselView = (CarouselView) view.findViewById(R.id.carouselView);
         carouselView.setPageCount(textCarousel.length);
         carouselView.setViewListener(viewListener);
+        carouselView.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                
+            }
+        });
         return view;
     }
     private String[] llenarLista(){
