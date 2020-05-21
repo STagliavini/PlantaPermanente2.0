@@ -19,7 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name="com.example.plantapermanente.empleados.modificar_empleado_perfil"
+        <activity android:name=".custom_carousel"></activity>
+        <activity
+            android:name=".empleados.modificar_empleado_perfil"
             android:parentActivityName=".MenuDrawerAnonimo">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />

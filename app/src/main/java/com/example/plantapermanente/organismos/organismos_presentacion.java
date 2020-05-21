@@ -26,6 +26,7 @@ import com.example.plantapermanente.empleados.empleado_enviar_mail;
 import com.example.plantapermanente.organismos.SQLITE.DBAdapter;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
+import com.synnapps.carouselview.ViewListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,10 +44,13 @@ public class organismos_presentacion extends Fragment {
     SharedPreferences sp;
     CarouselView carouselView;
     int[] sampleImages = {R.drawable.ministerio,R.drawable.ministerio};
-    ImageListener imageListener = new ImageListener() {
+    ViewListener viewListener=new ViewListener() {
         @Override
-        public void setImageForPosition(int position, ImageView imageView) {
-            imageView.setImageResource(sampleImages[position]);
+        public View setViewForPosition(int position) {
+            View customView = getLayoutInflater().inflate(R.layout.activity_custom_carousel, null);
+            ImageView imagen=customView.findViewById(R.id.imagen);
+            imagen.setImageResource(sampleImages[position]);
+            return customView;
         }
     };
     @Override
@@ -56,7 +60,7 @@ public class organismos_presentacion extends Fragment {
         sp= getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
         carouselView = (CarouselView) view.findViewById(R.id.carouselView);
         carouselView.setPageCount(sampleImages.length);
-        carouselView.setImageListener(imageListener);
+        carouselView.setViewListener(viewListener);
         return view;
     }
     private void llenarLista(){
