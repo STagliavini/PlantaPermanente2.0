@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Environment;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,6 +86,7 @@ public class Recibos extends Fragment {
     Map<String,Object> itempas;
     View vieww;
     String dni,nombre;
+    String idEmpleado,idOrganismo,idCargo,idCategoria,fechaLiquidacion;
     private static final int PERMISSION_STORAGE_CODE=1000;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -339,6 +342,11 @@ public class Recibos extends Fragment {
                             dni=itempas.get("dni").toString().substring(5);
                             nombre=itempas.get("codigo_empleado").toString()+itempas.get("id_organismo").toString()+
                             itempas.get("id_cargo").toString()+itempas.get("id_categoria").toString();
+                            idEmpleado=itempas.get("codigo_empleado").toString();
+                            idOrganismo=itempas.get("id_organismo").toString();
+                            idCargo=itempas.get("id_cargo").toString();
+                            idCategoria=itempas.get("id_categoria").toString();
+                            fechaLiquidacion=itempas.get("fecha_liquidacion").toString().substring(22);
                             String anio="";
                             String mes="";
                             Date date=null;
@@ -350,18 +358,24 @@ public class Recibos extends Fragment {
                                 Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
                             }
                             nombre=nombre+mes+"_"+anio;
-                            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-                                if(getContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)==
-                                        PackageManager.PERMISSION_DENIED){
-                                    String[] permissions={Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                                    requestPermissions(permissions,PERMISSION_STORAGE_CODE);
+                            imprimir(getResources().getString(R.string.host2)+"entity.recibosueldo/imprimir");
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                                        if(getContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)==
+                                                PackageManager.PERMISSION_DENIED){
+                                            String[] permissions={Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                                            requestPermissions(permissions,PERMISSION_STORAGE_CODE);
+                                        }
+                                        else{
+                                            iniciarDescarga();                    }
+                                    }
+                                    else {
+                                        iniciarDescarga();
+                                    }
                                 }
-                                else{
-                                    iniciarDescarga();                    }
-                            }
-                            else {
-                                iniciarDescarga();
-                            }
+                            },6000);
                         }
                     });
                 }
@@ -369,6 +383,43 @@ public class Recibos extends Fragment {
         }catch(JSONException e){
 
         }
+    }
+    private void imprimir(String URL){
+        StringRequest sr=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),error.networkResponse.toString()+"error",Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("codigo_empleado",idEmpleado);
+                parametros.put("id_organismo",idOrganismo);
+                parametros.put("id_cargo",idCargo);
+                parametros.put("id_categoria",idCategoria);
+                parametros.put("fecha_liquidacion",fechaLiquidacion);
+                return parametros;
+            }
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> parametros=new HashMap<>();
+                parametros.put("Content-Type","application/x-www-form-urlencoded");
+                return parametros;
+            }
+        };
+        RequestQueue rq=Volley.newRequestQueue(getContext());
+        rq.add(sr);
     }
     private void llenarSpinnerOrganismo(String URL){
         StringRequest sr=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
@@ -585,7 +636,7 @@ public class Recibos extends Fragment {
     private void iniciarDescarga(){
         System.out.println(nombre);
         System.out.println(dni);
-        DownloadManager.Request request=new DownloadManager.Request(Uri.parse(getResources().getString(R.string.host)+dni+"/"+nombre+".pdf"));
+        DownloadManager.Request request=new DownloadManager.Request(Uri.parse(getResources().getString(R.string.host3)+nombre+".pdf"));
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
         request.setTitle("Recibo de Sueldo");
         request.setDescription("Descargando Documento...");
