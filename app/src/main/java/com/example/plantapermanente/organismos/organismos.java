@@ -43,22 +43,11 @@ public class organismos extends Fragment {
     Map<String,Object> itempas;
     private List<Map<String, Object>> organismos;
     SharedPreferences sp;
-    CarouselView carouselView;
-    int[] sampleImages = {R.drawable.ministerio,R.drawable.ministerio};
-    ImageListener imageListener = new ImageListener() {
-        @Override
-        public void setImageForPosition(int position, ImageView imageView) {
-            imageView.setImageResource(sampleImages[position]);
-        }
-    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_organismos, container, false);
         sp= getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
-        carouselView = (CarouselView) view.findViewById(R.id.carouselView);
-        carouselView.setPageCount(sampleImages.length);
-        carouselView.setImageListener(imageListener);
         codigo=view.findViewById(R.id.edtCodigo);
         nombre=view.findViewById(R.id.edtNombre);
         codigo.addTextChangedListener(new TextWatcher() {

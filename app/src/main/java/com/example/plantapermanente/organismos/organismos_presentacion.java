@@ -39,8 +39,6 @@ import java.util.List;
 import java.util.Map;
 
 public class organismos_presentacion extends Fragment {
-    EditText codigo;
-    EditText nombre;
     private DBAdapter dba;
     ListView list;
     View view;
@@ -50,6 +48,7 @@ public class organismos_presentacion extends Fragment {
     CarouselView carouselView;
     int[] sampleImages = {R.drawable.ministerio,R.drawable.ministerio};
     String[]textCarousel;
+    int[]cods;
     FragmentTransaction ft;
     FragmentManager fm;
     ViewListener viewListener=new ViewListener() {
@@ -59,6 +58,7 @@ public class organismos_presentacion extends Fragment {
             fm=getFragmentManager();
             ImageView imagen=customView.findViewById(R.id.imagen);
             TextView nombre=customView.findViewById(R.id.nombre_carousel_organismo);
+            TextView codigo=customView.findViewById(R.id.codOrga);
             if(sampleImages.length>position){
                 imagen.setImageResource(sampleImages[position]);
             }
@@ -67,13 +67,16 @@ public class organismos_presentacion extends Fragment {
             }
             nombre.setText(textCarousel[position]);
             nombre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            codigo.setText(String.valueOf(cods[position]));
             return customView;
         }
     };
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_organismos_presentacion, container, false);
-        textCarousel=llenarLista();
+        Object[] cadenas=llenarLista();
+        cods=(int[])cadenas[0];
+        textCarousel=(String[])cadenas[1];
         sp= getActivity().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
         carouselView = (CarouselView) view.findViewById(R.id.carouselView);
         carouselView.setPageCount(textCarousel.length);
@@ -81,7 +84,16 @@ public class organismos_presentacion extends Fragment {
         carouselView.setImageClickListener(new ImageClickListener() {
             @Override
             public void onClick(int position) {
+                Bundle extras=new Bundle();
+                extras.putInt("codigoOrganismo",cods[position]);
+                if(sampleImages.length>position){
+                    extras.putInt("imagenOrganismo",sampleImages[position]);
+                }
+                else{
+                    extras.putInt("imagenOrganismo",R.drawable.desconocido);
+                }
                 organismo_detalle od=new organismo_detalle();
+                od.setArguments(extras);
                 ft=fm.beginTransaction();
                 ft.replace(R.id.nav_host_fragment,od);
                 ft.addToBackStack(null);
@@ -90,19 +102,25 @@ public class organismos_presentacion extends Fragment {
         });
         return view;
     }
-    private String[] llenarLista(){
+    private Object[] llenarLista(){
         String[]nombres;
+        int[]cods;
         dba=new DBAdapter(this.getContext());
         dba.abrir();
         int cod=-1;
         Cursor cursor=dba.getFiltroOrganismos(cod,"");
         cursor.moveToFirst();
         nombres=new String[cursor.getCount()];
+        cods=new int[cursor.getCount()];
         for(int i=0;i<cursor.getCount();i++){
+            cods[i]=cursor.getInt(1);
             nombres[i]=cursor.getString(2);
             cursor.moveToNext();
         }
+        Object[] cadenas=new Object[2];
+        cadenas[0]=cods;
+        cadenas[1]=nombres;
         dba.cerrar();
-        return nombres;
+        return cadenas;
     }
 }

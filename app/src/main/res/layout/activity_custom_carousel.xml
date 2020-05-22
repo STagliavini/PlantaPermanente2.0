@@ -22,4 +22,10 @@
         android:background="@drawable/border"
         android:textSize="40sp" />
 
+    <TextView
+        android:id="@+id/codOrga"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </RelativeLayout>

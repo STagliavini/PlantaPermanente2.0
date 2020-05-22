@@ -30,4 +30,5 @@
     <string name="title_activity_puntos_empleados">Mapa</string>
     <string name="title_activity_menu_drawer_anonimo">MenuDrawerAnonimo</string>
     <string name="title_activity_menu_drawer_empleado">MenuDrawerEmpleado</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
