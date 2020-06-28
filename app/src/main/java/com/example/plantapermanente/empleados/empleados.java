@@ -141,6 +141,7 @@ public class empleados extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            llenarSpinnerOrganismo(getResources().getString(R.string.host2)+"entity.empleado/listado_organismos");
             traerEmpleados(getResources().getString(R.string.host2)+"entity.empleado/listado_filtrado");
         }
 
@@ -157,6 +158,7 @@ public class empleados extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            llenarSpinnerOrganismo(getResources().getString(R.string.host2)+"entity.empleado/listado_organismos");
             traerEmpleados(getResources().getString(R.string.host2)+"entity.empleado/listado_filtrado");
         }
 
@@ -243,20 +245,30 @@ public class empleados extends Fragment {
             empleados=new ArrayList<Map<String, Object>>();
             JSONArray jo=null;
             Map<String, Object> item;
+            boolean existe;
             for(int i=0;i<ja.length();i++){
+                existe=false;
                 jo=ja.getJSONArray(i);
-                item = new HashMap<String, Object>();
-                Date date=new Date(Long.parseLong(jo.getJSONObject(4).getString("nacimientoEmpleado")));
-                String fecha;
-                fecha=new SimpleDateFormat("yyyy-MM-dd").format(date);
-                item.put("dni", "DNI: "+jo.getJSONObject(4).getLong("dniEmpleado"));
-                item.put("apnom", "Apellido y Nombre: "+jo.getJSONObject(4).getString("apellidoEmpleado")+" "+jo.getJSONObject(4).getString("nombreEmpleado"));
-                item.put("fecnac", "Fecha de Nacimiento: "+fecha);
-                item.put("sexo", "Sexo: "+jo.getJSONObject(4).getString("sexoEmpleado"));
-                item.put("telefono", "Telefono: "+jo.getJSONObject(4).getString("telefonoEmpleado"));
-                item.put("direccion", "Direccion: "+jo.getJSONObject(4).getString("direccionEmpleado"));
-                item.put("mail", "Mail: "+jo.getJSONObject(4).getString("mailEmpleado"));
-                empleados.add(item);
+                for(int j=0;j<empleados.size();j++){
+
+                    if(Long.toString(jo.getJSONObject(4).getLong("dniEmpleado")).equals(empleados.get(j).get("dni").toString().substring(5))){
+                        existe=true;
+                    }
+                }
+                if(!existe){
+                    item = new HashMap<String, Object>();
+                    Date date=new Date(Long.parseLong(jo.getJSONObject(4).getString("nacimientoEmpleado")));
+                    String fecha;
+                    fecha=new SimpleDateFormat("yyyy-MM-dd").format(date);
+                    item.put("dni", "DNI: "+jo.getJSONObject(4).getLong("dniEmpleado"));
+                    item.put("apnom", "Apellido y Nombre: "+jo.getJSONObject(4).getString("apellidoEmpleado")+" "+jo.getJSONObject(4).getString("nombreEmpleado"));
+                    item.put("fecnac", "Fecha de Nacimiento: "+fecha);
+                    item.put("sexo", "Sexo: "+jo.getJSONObject(4).getString("sexoEmpleado"));
+                    item.put("telefono", "Telefono: "+jo.getJSONObject(4).getString("telefonoEmpleado"));
+                    item.put("direccion", "Direccion: "+jo.getJSONObject(4).getString("direccionEmpleado"));
+                    item.put("mail", "Mail: "+jo.getJSONObject(4).getString("mailEmpleado"));
+                    empleados.add(item);
+                }
             }
             SimpleAdapter adaptador =
                     new SimpleAdapter(this.getContext(), empleados,
