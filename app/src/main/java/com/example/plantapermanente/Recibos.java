@@ -111,10 +111,7 @@ public class Recibos extends Fragment {
         edtFecha_Final.setText("");
         organismo=(Spinner)view.findViewById(R.id.spinOrganismo);
         cargo=(Spinner)view.findViewById(R.id.spinCargo);
-        categoria=(Spinner)view.findViewById(R.id.spinCategoria);
         llenarSpinnerOrganismo(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_organismos");
-        llenarSpinnerCargo(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_cargos");
-        llenarSpinnerCategoria(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_categorias");
         edtDni.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -135,6 +132,7 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 nombre_organismo=parent.getItemAtPosition(position).toString();
+                llenarSpinnerCargo(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_cargos");
                 traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
             }
 
@@ -147,18 +145,6 @@ public class Recibos extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 nombre_cargo=parent.getItemAtPosition(position).toString();
-                traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        categoria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                codigo_categoria=parent.getItemAtPosition(position).toString();
                 traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
             }
 
@@ -447,40 +433,6 @@ public class Recibos extends Fragment {
                         }
                     }
                     organismo.setAdapter(dataAdapterOrg);
-                    cargos=new ArrayList<>();
-                    cargos.add("Seleccionar un Cargo");
-                    dataAdapterCar=new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,cargos);
-                    dataAdapterCar.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    for(int i=0;i<ja.length();i++){
-                        existe=false;
-                        jo=ja.getJSONObject(i);
-                        for(int j=0;j<cargos.size();j++){
-                            if(jo.getString("nombreCargo").equals(cargos.get(j))){
-                                existe=true;
-                            }
-                        }
-                        if(!existe){
-                            cargos.add(jo.getString("nombreCargo"));
-                        }
-                    }
-                    cargo.setAdapter(dataAdapterCar);
-                    categorias=new ArrayList<>();
-                    categorias.add("Seleccionar una Categoria");
-                    dataAdapterCat=new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,categorias);
-                    dataAdapterCat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    for(int i=0;i<ja.length();i++){
-                        existe=false;
-                        jo=ja.getJSONObject(i);
-                        for(int j=0;j<categorias.size();j++){
-                            if(jo.getString("codigoCategoria").equals(categorias.get(j))){
-                                existe=true;
-                            }
-                        }
-                        if(!existe){
-                            categorias.add(jo.getString("codigoCategoria"));
-                        }
-                    }
-                    categoria.setAdapter(dataAdapterCat);
                 }catch(JSONException e){
                 }
              }
@@ -493,6 +445,12 @@ public class Recibos extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String>parametros=new HashMap<>();
+                if(sp.getString("tipo","").equals("Empleado")){
+                    parametros.put("dni_empleado",sp.getString("usuario",""));
+                }
+                else{
+                    parametros.put("dni_empleado","0");
+                }
                 return parametros;
             }
             @Override
@@ -548,61 +506,13 @@ public class Recibos extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String>parametros=new HashMap<>();
-                return parametros;
-            }
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded";
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> parametros=new HashMap<>();
-                parametros.put("Content-Type","application/x-www-form-urlencoded");
-                return parametros;
-            }
-        };
-        RequestQueue rq= Volley.newRequestQueue(getContext());
-        rq.add(sr);
-    }
-    private void llenarSpinnerCategoria(String URL){
-        StringRequest sr=new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JSONArray ja=null;
-                try{
-                    boolean existe=false;
-                    categorias=new ArrayList<>();
-                    categorias.add("Seleccionar una Categoria");
-                    dataAdapterCat=new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,categorias);
-                    dataAdapterCat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    ja=new JSONArray(response);
-                    JSONObject jo=null;
-                    for(int i=0;i<ja.length();i++){
-                        existe=false;
-                        jo=ja.getJSONObject(i);
-                        for(int j=0;j<categorias.size();j++){
-                            if(jo.getString("codigoCategoria").equals(categorias.get(j))){
-                                existe=true;
-                            }
-                        }
-                        if(!existe){
-                            categorias.add(jo.getString("codigoCategoria"));
-                        }
-                    }
-                    categoria.setAdapter(dataAdapterCat);
-                }catch(JSONException e){
+                if(sp.getString("tipo","").equals("Empleado")){
+                    parametros.put("dni_empleado",sp.getString("usuario",""));
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String>parametros=new HashMap<>();
+                else{
+                    parametros.put("dni_empleado","0");
+                }
+                parametros.put("nombre_organismo",nombre_organismo);
                 return parametros;
             }
             @Override

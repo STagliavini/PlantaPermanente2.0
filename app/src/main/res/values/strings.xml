@@ -10,7 +10,7 @@
     <string name="action_settings">Settings</string>
     <string name="host">https://tagliavinilab6.000webhostapp.com/</string>
     <string name="host2">http://192.168.1.13:8080/WSPP/webresources/</string>
-    <string name="host3">http://192.168.1.13:33035/WSPP/recibos/</string>
+    <string name="host3">http://192.168.1.13:8080/WSPP/recibos/</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
