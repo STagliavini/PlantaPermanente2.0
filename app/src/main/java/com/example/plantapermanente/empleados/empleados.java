@@ -178,21 +178,21 @@ public class empleados extends Fragment {
             String[] datos = {"dni", "apnom", "fecnac", "sexo","telefono","direccion","mail"};
             int[] vistas = {R.id.dni, R.id.apnom,R.id.fecnac, R.id.sexo, R.id.telefono,R.id.direccion,R.id.mail};
             empleados=new ArrayList<Map<String, Object>>();
-            JSONObject jo=null;
+            JSONArray jo=null;
             Map<String, Object> item;
             for(int i=0;i<ja.length();i++){
-                jo=ja.getJSONObject(i);
+                jo=ja.getJSONArray(i);
                 item = new HashMap<String, Object>();
-                Date date=new Date(Long.parseLong(jo.getString("nacimientoEmpleado")));
+                Date date=new Date(Long.parseLong(jo.getJSONObject(4).getString("nacimientoEmpleado")));
                 String fecha;
                 fecha=new SimpleDateFormat("yyyy-MM-dd").format(date);
-                item.put("dni", "DNI: "+jo.getLong("dniEmpleado"));
-                item.put("apnom", "Apellido y Nombre: "+jo.getString("apellidoEmpleado")+" "+jo.getString("nombreEmpleado"));
+                item.put("dni", "DNI: "+jo.getJSONObject(4).getLong("dniEmpleado"));
+                item.put("apnom", "Apellido y Nombre: "+jo.getJSONObject(4).getString("apellidoEmpleado")+" "+jo.getJSONObject(4).getString("nombreEmpleado"));
                 item.put("fecnac", "Fecha de Nacimiento: "+fecha);
-                item.put("sexo", "Sexo: "+jo.getString("sexoEmpleado"));
-                item.put("telefono", "Telefono: "+jo.getString("telefonoEmpleado"));
-                item.put("direccion", "Direccion: "+jo.getString("direccionEmpleado"));
-                item.put("mail", "Mail: "+jo.getString("mailEmpleado"));
+                item.put("sexo", "Sexo: "+jo.getJSONObject(4).getString("sexoEmpleado"));
+                item.put("telefono", "Telefono: "+jo.getJSONObject(4).getString("telefonoEmpleado"));
+                item.put("direccion", "Direccion: "+jo.getJSONObject(4).getString("direccionEmpleado"));
+                item.put("mail", "Mail: "+jo.getJSONObject(4).getString("mailEmpleado"));
                 empleados.add(item);
             }
             SimpleAdapter adaptador =

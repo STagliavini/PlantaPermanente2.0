@@ -109,7 +109,7 @@ public class modificar_empleado_perfil extends AppCompatActivity {
         edtNacimiento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dpd=new DatePickerDialog(getApplicationContext(), new DatePickerDialog.OnDateSetListener() {
+                dpd=new DatePickerDialog(modificar_empleado_perfil.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         edtNacimiento.setText(dayOfMonth+"/"+(month+1)+"/"+year);
@@ -126,10 +126,10 @@ public class modificar_empleado_perfil extends AppCompatActivity {
             public void onResponse(String response) {
                 try{
                     JSONArray jo=new JSONArray(response);
-                    edtTelefono.setText(jo.getJSONObject(0).getString("telefonoEmpleado"));
-                    edtMail.setText(jo.getJSONObject(0).getString("mailEmpleado"));
-                    edtDireccion.setText(jo.getJSONObject(0).getString("direccionEmpleado"));
-                    Date form=new Date(Long.parseLong(jo.getJSONObject(0).getString("nacimientoEmpleado")));
+                    edtTelefono.setText(jo.getJSONArray(0).getJSONObject(4).getString("telefonoEmpleado"));
+                    edtMail.setText(jo.getJSONArray(0).getJSONObject(4).getString("mailEmpleado"));
+                    edtDireccion.setText(jo.getJSONArray(0).getJSONObject(4).getString("direccionEmpleado"));
+                    Date form=new Date(Long.parseLong(jo.getJSONArray(0).getJSONObject(4).getString("nacimientoEmpleado")));
                     Calendar c=Calendar.getInstance();
                     c.setTime(form);
                     dia=c.get(Calendar.DAY_OF_MONTH);

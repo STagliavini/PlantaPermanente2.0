@@ -1,9 +1,13 @@
 package com.example.plantapermanente.organismos;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -49,12 +53,20 @@ public class organismo_detalle extends Fragment {
                 String tel=telOrgDet.getText().toString();
                 String org=nombreOrgaDet.getText().toString();
                 tel=tel.substring(10);
-                Intent intencion=new Intent(getContext(), organismo_contacto.class);
+                /*Intent intencion=new Intent(getContext(), organismo_contacto.class);
                 Bundle pam= new Bundle();
                 pam.putString("tel",tel);
                 pam.putString("org",org);
                 intencion.putExtras(pam);
-                startActivity(intencion);
+                startActivity(intencion);*/
+                Intent llamar=new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+tel));
+                if(ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.CALL_PHONE)!=
+                        PackageManager.PERMISSION_GRANTED){
+                    String[] permissions={Manifest.permission.CALL_PHONE};
+                    requestPermissions(permissions,1002);
+                    return;
+                }
+                startActivity(llamar);
             }
         });
         mandarMailDet.setOnClickListener(new View.OnClickListener() {
@@ -62,9 +74,9 @@ public class organismo_detalle extends Fragment {
             public void onClick(View view) {
                 String mail=mailOrgDet.getText().toString();
                 mail=mail.substring(6);
-                Intent intencion=new Intent(getContext(), empleado_enviar_mail.class);
+                Intent intencion=new Intent(getContext(), organismo_enviar_mail.class);
                 Bundle pam= new Bundle();
-                pam.putString("mail",mail);
+                pam.putString("mailorg",mail);
                 intencion.putExtras(pam);
                 startActivity(intencion);
             }

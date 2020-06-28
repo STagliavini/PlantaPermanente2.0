@@ -2,6 +2,8 @@ package com.example.plantapermanente.empleados;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -47,8 +49,8 @@ public class empleado_enviar_mail extends AppCompatActivity {
         Bundle bd=getIntent().getExtras();
         context=this;
         correoHacia=bd.getString("mail");
-        correoET=findViewById(R.id.mCorreo);
-        contET=findViewById(R.id.mCont);
+        //correoET=findViewById(R.id.mCorreo);
+        //contET=findViewById(R.id.mCont);
         asuntoET=findViewById(R.id.mAsunto);
         mensajeET=findViewById(R.id.mMensaje);
         enviar=findViewById(R.id.btnmEnviar);
@@ -61,18 +63,25 @@ public class empleado_enviar_mail extends AppCompatActivity {
         });
     }
     public void enviarEmail() {
-        pdialog = ProgressDialog.show(context, "", "Enviando correo...",true);
+        pdialog = ProgressDialog.show(context, "", "Abriendo aplicacion de email...",true);
 
         //Policy configurations
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         asunto = asuntoET.getText().toString();
-        correo = correoET.getText().toString();
+        //correo = correoET.getText().toString();
         mensaje = mensajeET.getText().toString();
-        cont = contET.getText().toString();
+        //cont = contET.getText().toString();
+        Intent email=new Intent(Intent.ACTION_SEND);
+        email.setData(Uri.parse("mailto:"));
+        email.setType("text/plain");
+        email.putExtra(Intent.EXTRA_EMAIL,new String[]{correoHacia});
+        email.putExtra(Intent.EXTRA_SUBJECT,asunto);
+        email.putExtra(Intent.EXTRA_TEXT,mensaje);
+        startActivity(Intent.createChooser(email,"Seleccionar Aplicacion"));
         //Connection to GMail's SMTP server
-        Properties prop = new Properties();
+        /*Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.starttls.enable", "true") ;
@@ -102,7 +111,7 @@ public class empleado_enviar_mail extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(context,"¡Hubo un fallo en el envio. Revise los datos ingresados!",Toast.LENGTH_LONG).show();
             e.printStackTrace();
-        }
+        }*/
         pdialog.hide();
     }
 }

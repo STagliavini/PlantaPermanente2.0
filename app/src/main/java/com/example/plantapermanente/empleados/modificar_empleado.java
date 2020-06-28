@@ -142,10 +142,10 @@ private void traerDatos(String URL){
         public void onResponse(String response) {
             try{
                 JSONArray jo=new JSONArray(response);
-                edtTelefono.setText(jo.getJSONObject(0).getString("telefonoEmpleado"));
-                edtMail.setText(jo.getJSONObject(0).getString("mailEmpleado"));
-                edtDireccion.setText(jo.getJSONObject(0).getString("direccionEmpleado"));
-                Date form=new Date(Long.parseLong(jo.getJSONObject(0).getString("nacimientoEmpleado")));
+                edtTelefono.setText(jo.getJSONArray(0).getJSONObject(4).getString("telefonoEmpleado"));
+                edtMail.setText(jo.getJSONArray(0).getJSONObject(4).getString("mailEmpleado"));
+                edtDireccion.setText(jo.getJSONArray(0).getJSONObject(4).getString("direccionEmpleado"));
+                Date form=new Date(Long.parseLong(jo.getJSONArray(0).getJSONObject(4).getString("nacimientoEmpleado")));
                 Calendar c=Calendar.getInstance();
                 c.setTime(form);
                 dia=c.get(Calendar.DAY_OF_MONTH);

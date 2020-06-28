@@ -55,7 +55,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="15dp"
                 android:background="#1976d2"
-                android:text="Agregar a Contactos"
+                android:text="Realizar Llamada"
                 android:textColor="#FFF"
                 android:textSize="18sp" />
         </LinearLayout>
