@@ -86,7 +86,7 @@ public class Recibos extends Fragment {
     Map<String,Object> itempas;
     View vieww;
     String dni,nombre;
-    String idEmpleado,idOrganismo,idCargo,idCategoria,fechaLiquidacion,nombOrganismo;
+    String idEmpleado,idOrganismo,idCargo,idCategoria,fechaLiquidacion;
     private static final int PERMISSION_STORAGE_CODE=1000;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
