@@ -110,5 +110,6 @@ public class organismo_enviar_mail extends AppCompatActivity {
         }*/
         pdialog.hide();
         finish();
+        Toast.makeText(getApplicationContext(),"Aplicacion de Email abierta correctamente",Toast.LENGTH_LONG).show();
     }
 }

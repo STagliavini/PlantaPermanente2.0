@@ -114,5 +114,6 @@ public class empleado_enviar_mail extends AppCompatActivity {
         }*/
         finish();
         pdialog.hide();
+        Toast.makeText(getApplicationContext(),"Aplicacion de Email abierta correctamente",Toast.LENGTH_LONG).show();
     }
 }
