@@ -1,40 +1,26 @@
 package com.example.plantapermanente.organismos;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.plantapermanente.R;
-import com.example.plantapermanente.empleados.empleado_enviar_mail;
-import com.example.plantapermanente.empleados.empleados;
 import com.example.plantapermanente.organismos.SQLITE.DBAdapter;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageClickListener;
-import com.synnapps.carouselview.ImageListener;
 import com.synnapps.carouselview.ViewListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +32,7 @@ public class organismos_presentacion extends Fragment {
     private List<Map<String, Object>> organismos;
     SharedPreferences sp;
     CarouselView carouselView;
-    int[] sampleImages = {R.drawable.ministerio,R.drawable.ministerio};
+    int[] sampleImages = {R.drawable.educacion,R.drawable.turismo,R.drawable.municipalidad,R.drawable.desconocido,R.drawable.unse,R.drawable.desconocido,R.drawable.ministerio2};
     String[]textCarousel;
     int[]cods;
     FragmentTransaction ft;
