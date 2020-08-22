@@ -129,7 +129,7 @@ public class organismos extends Fragment {
                 LayoutInflater inflater=getLayoutInflater();
                 View vieww=inflater.inflate(R.layout.cuadro_accion_organismo,null);
                 builder.setView(vieww);
-                AlertDialog dialog=builder.create();
+                final AlertDialog dialog=builder.create();
                 dialog.show();
                 Button btnContact=vieww.findViewById(R.id.btnContact);
                 Button btnMail=vieww.findViewById(R.id.btnMail);
@@ -165,6 +165,7 @@ public class organismos extends Fragment {
                         pam.putString("mail",mail);
                         intencion.putExtras(pam);
                         startActivity(intencion);
+                        dialog.hide();
                     }
                 });
                 btnMapa.setOnClickListener(new View.OnClickListener() {

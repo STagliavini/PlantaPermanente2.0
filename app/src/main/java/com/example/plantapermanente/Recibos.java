@@ -121,6 +121,7 @@ public class Recibos extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 llenarSpinnerOrganismo(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_organismos");
+                llenarSpinnerCargo(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_cargos");
                 traerRecibos(getResources().getString(R.string.host2)+"entity.recibosueldo/listado_filtrado");
             }
 
@@ -516,7 +517,12 @@ public class Recibos extends Fragment {
                     parametros.put("dni_empleado",sp.getString("usuario",""));
                 }
                 else{
-                    parametros.put("dni_empleado","0");
+                    if(!edtDni.getText().toString().isEmpty()){
+                        parametros.put("dni_empleado",edtDni.getText().toString());
+                    }
+                    else{
+                        parametros.put("dni_empleado","0");
+                    }
                 }
                 parametros.put("nombre_organismo",nombre_organismo);
                 return parametros;

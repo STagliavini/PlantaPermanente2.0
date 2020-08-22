@@ -324,6 +324,7 @@ public class empleados extends Fragment {
                             pam.putString("mail",mail);
                             intencion.putExtras(pam);
                             startActivity(intencion);
+                            dialog.hide();
                         }
                     });
                     btnMapa.setOnClickListener(new View.OnClickListener() {

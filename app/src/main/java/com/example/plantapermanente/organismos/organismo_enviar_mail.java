@@ -109,5 +109,6 @@ public class organismo_enviar_mail extends AppCompatActivity {
             e.printStackTrace();
         }*/
         pdialog.hide();
+        finish();
     }
 }

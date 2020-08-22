@@ -112,6 +112,7 @@ public class empleado_enviar_mail extends AppCompatActivity {
             Toast.makeText(context,"¡Hubo un fallo en el envio. Revise los datos ingresados!",Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }*/
+        finish();
         pdialog.hide();
     }
 }
