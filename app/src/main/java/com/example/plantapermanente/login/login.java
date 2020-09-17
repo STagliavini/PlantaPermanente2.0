@@ -135,7 +135,7 @@ public class login extends Fragment {
                         contadorSueldos(getResources().getString(R.string.host2)+"entity.recibosueldo/contar");
                     }
                     catch (JSONException e){
-                        Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),"Error al Iniciar Sesion("+e.getMessage()+")",Toast.LENGTH_LONG).show();
                     }
                 }
                 else{
