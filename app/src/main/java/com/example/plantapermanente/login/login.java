@@ -135,7 +135,7 @@ public class login extends Fragment {
                         contadorSueldos(getResources().getString(R.string.host2)+"entity.recibosueldo/contar");
                     }
                     catch (JSONException e){
-                        Toast.makeText(getContext(),"Error al Iniciar Sesion("+e.getMessage()+")",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),"Error al Iniciar Sesion("+e.toString()+")",Toast.LENGTH_LONG).show();
                     }
                 }
                 else{
@@ -145,7 +145,7 @@ public class login extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(getContext(),"Error al Iniciar Sesion("+error.toString()+")",Toast.LENGTH_LONG).show();
             }
         }){
             @Override

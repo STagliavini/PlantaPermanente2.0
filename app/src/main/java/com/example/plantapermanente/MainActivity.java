@@ -201,14 +201,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                         dba.cerrar();
                     }catch(JSONException e){
-                        Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Error al Sincronizar("+e.toString()+")",Toast.LENGTH_LONG).show();
                     }
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Error al Sincronizar("+error.toString()+")",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue requestQueue= Volley.newRequestQueue(this);
